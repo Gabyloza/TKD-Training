@@ -1,7 +1,7 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0d0d0d;
+background:#0b0b0b;
 color:white;
 padding:15px;
 }
@@ -20,7 +20,7 @@ gap:10px;
 }
 
 .card{
-background:#1b1b1b;
+background:#1a1a1a;
 padding:15px;
 border-radius:15px;
 margin-bottom:15px;
@@ -52,13 +52,14 @@ border:none;
 border-radius:10px;
 background:#00ff99;
 font-weight:bold;
-}
-
-.check label{
-display:block;
-margin:5px 0;
+cursor:pointer;
 }
 
 canvas{
 max-width:100%;
+}
+
+label{
+display:block;
+margin-top:8px;
 }

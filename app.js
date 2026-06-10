@@ -5,31 +5,42 @@ speed:0,
 flex:0,
 swim:0,
 bike:0,
+fatigue:5,
 intensity:5,
-fatigue:5
+xp:0,
+level:1,
+weeklyLoad:0
 };
 
-function saveDay(){
+// =====================
+// GUARDAR
+// =====================
 
-data.tkd = +document.getElementById("tkd").value;
-data.strength = +document.getElementById("strength").value;
-data.speed = +document.getElementById("speed").value;
-data.flex = +document.getElementById("flex").value;
-data.swim = +document.getElementById("swim").value;
-data.bike = +document.getElementById("bike").value;
-data.intensity = +document.getElementById("intensity").value;
-data.fatigue = +document.getElementById("fatigue").value;
+function saveTraining(){
 
-localStorage.setItem("tkdData", JSON.stringify(data));
+data.tkd = +tkd.value;
+data.strength = +strength.value;
+data.speed = +speed.value;
+data.flex = +flex.value;
+data.swim = +swim.value;
+data.bike = +bike.value;
+data.fatigue = +fatigue.value;
+data.intensity = +intensity.value;
 
-update();
-addPoints();
-checkAchievements();
-}
+// XP SYSTEM
+let xpGain =
+data.tkd +
+data.strength +
+data.speed +
+data.flex;
 
-function update(){
+data.xp += xpGain;
 
-let total =
+// LEVEL SYSTEM
+data.level = Math.floor(data.xp / 500) + 1;
+
+// LOAD SYSTEM
+data.weeklyLoad =
 data.tkd +
 data.strength +
 data.speed +
@@ -37,82 +48,122 @@ data.flex +
 data.swim +
 data.bike;
 
-let percent = Math.min(100, total/6);
+// STATUS
+let status = "";
 
-document.getElementById("progress").style.width = percent + "%";
-document.getElementById("progressText").innerText = Math.round(percent) + "%";
+if(data.weeklyLoad > 500){
+status = "🔥 Sobrecarga";
+}
+else if(data.weeklyLoad > 300){
+status = "⚡ Óptimo";
+}
+else{
+status = "📉 Bajo volumen";
 }
 
-function addPoints(){
+// SAVE
+localStorage.setItem("elite", JSON.stringify(data));
 
-let points =
-data.tkd +
-data.strength +
-data.speed +
-data.flex;
-
-document.getElementById("points").innerText = points;
+// UPDATE UI
+updateUI(status);
+updateChart();
+checkAchievements();
 }
+
+// =====================
+// CARGAR
+// =====================
 
 function load(){
 
-let saved = JSON.parse(localStorage.getItem("tkdData"));
+let saved = JSON.parse(localStorage.getItem("elite"));
 
-if(saved){
+if(saved) data = saved;
 
-data = saved;
-
-document.getElementById("tkd").value = data.tkd;
-document.getElementById("strength").value = data.strength;
-document.getElementById("speed").value = data.speed;
-document.getElementById("flex").value = data.flex;
-document.getElementById("swim").value = data.swim;
-document.getElementById("bike").value = data.bike;
-document.getElementById("intensity").value = data.intensity;
-document.getElementById("fatigue").value = data.fatigue;
-
-update();
-addPoints();
+updateUI("");
 }
+
+// =====================
+// UI
+// =====================
+
+function updateUI(status){
+
+level.innerText = data.level;
+xp.innerText = data.xp;
+load.innerText = data.weeklyLoad;
+loadStatus.innerText = status;
+
+// MACROCICLO
+let month = new Date().getMonth();
+
+let cycle = "";
+
+if(month == 6) cycle = "Julio - Base";
+if(month == 7) cycle = "Agosto - Fuerza";
+if(month == 8) cycle = "Septiembre - Potencia";
+if(month == 9) cycle = "Octubre - Velocidad";
+if(month == 10) cycle = "Noviembre - Combate";
+if(month == 11) cycle = "Diciembre - Peak";
+
+document.getElementById("cycle").innerText = cycle;
 }
+
+// =====================
+// LOGROS
+// =====================
 
 function checkAchievements(){
 
 let list = document.getElementById("achievements");
 
-if(data.tkd > 80){
-list.innerHTML += "<li>🥋 Entreno fuerte de TKD</li>";
+if(data.level >= 5){
+list.innerHTML += "<li>🥋 Nivel 5 alcanzado</li>";
 }
 
-if(data.flex > 40){
-list.innerHTML += "<li>🤸 Flexibilidad en progreso</li>";
+if(data.weeklyLoad > 400){
+list.innerHTML += "<li>🔥 Semana de alto rendimiento</li>";
 }
 
-if(data.speed > 30){
-list.innerHTML += "<li>⚡ Velocidad mejorando</li>";
+if(data.xp > 1000){
+list.innerHTML += "<li>⚡ 1000 XP acumulados</li>";
 }
 }
 
-function chart(){
+// =====================
+// GRAFICO
+// =====================
 
-new Chart(document.getElementById("chart"),{
+function updateChart(){
+
+new Chart(chart,{
 
 type:"radar",
 
 data:{
 labels:["TKD","Fuerza","Velocidad","Flex","Natación","Bici"],
 datasets:[{
-data:[data.tkd,data.strength,data.speed,data.flex,data.swim,data.bike],
-backgroundColor:"rgba(0,255,136,0.3)",
-borderColor:"#00ff88"
+data:[
+data.tkd,
+data.strength,
+data.speed,
+data.flex,
+data.swim,
+data.bike
+],
+backgroundColor:"rgba(0,255,153,0.3)",
+borderColor:"#00ff99"
 }]
 }
-
 });
 
 }
 
+// =====================
+// INIT
+// =====================
+
 window.onload = function(){
 load();
-chart();
+updateChart();
 };

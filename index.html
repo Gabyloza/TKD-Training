@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ITF Athlete OS</title>
+<title>ITF Athlete OS 8.0</title>
 
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,61 +13,73 @@
 <body>
 
 <header>
-<h1>🥋 ITF ATHLETE OS</h1>
-<p>App profesional de rendimiento</p>
+<h1>🥋 ITF ATHLETE OS 8.0</h1>
+
+<nav>
+<button onclick="show('dashboard')">Dashboard</button>
+<button onclick="show('calendar')">Calendario</button>
+<button onclick="show('session')">Entreno</button>
+<button onclick="show('history')">Historial</button>
+</nav>
+
 </header>
 
 <!-- DASHBOARD -->
-<section class="card">
+<section id="dashboard" class="page active">
 
-<h2>🧠 Coach IA</h2>
-<p id="aiMessage">Analizando...</p>
+<h2>🧠 IA Coach</h2>
+<p id="ai"></p>
 
-<h2>📊 Score</h2>
-<h1 id="score">0</h1>
+<h2>📊 Estado del atleta</h2>
+<p id="status"></p>
+
+<canvas id="chart"></canvas>
 
 </section>
 
-<!-- INPUT -->
-<section class="card">
+<!-- CALENDARIO -->
+<section id="calendar" class="page">
 
-<h2>📅 Nueva sesión</h2>
+<h2>📅 Calendario</h2>
+<div id="cal"></div>
+
+</section>
+
+<!-- SESIÓN -->
+<section id="session" class="page">
+
+<h2>🥋 Sesión de entrenamiento</h2>
 
 <label>Formas ITF</label>
-<input type="number" id="forms">
+<input id="forms" type="number">
 
 <label>Sparring</label>
-<input type="number" id="sparring">
+<input id="sparring" type="number">
 
 <label>Fuerza</label>
-<input type="number" id="strength">
+<input id="strength" type="number">
 
 <label>Velocidad</label>
-<input type="number" id="speed">
+<input id="speed" type="number">
 
 <label>Flexibilidad</label>
-<input type="number" id="flex">
+<input id="flex" type="number">
 
 <label>Resistencia</label>
-<input type="number" id="endurance">
+<input id="endurance" type="number">
 
-<button onclick="saveSession()">Guardar sesión</button>
+<h3>📝 Observaciones</h3>
+<textarea id="notes" placeholder="Cómo te sentiste, errores, feedback..."></textarea>
+
+<button onclick="save()">💾 Guardar sesión</button>
 
 </section>
 
 <!-- HISTORIAL -->
-<section class="card">
+<section id="history" class="page">
 
-<h2>📚 Historial</h2>
-<div id="history"></div>
-
-</section>
-
-<!-- GRAFICO -->
-<section class="card">
-
-<h2>📈 Progreso real</h2>
-<canvas id="chart"></canvas>
+<h2>📚 Historial completo</h2>
+<div id="list"></div>
 
 </section>
 

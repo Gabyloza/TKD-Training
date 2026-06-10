@@ -1,10 +1,10 @@
 let data = {
-tkd:0,
+forms:0,
+sparring:0,
 strength:0,
 speed:0,
 flex:0,
-swim:0,
-bike:0,
+endurance:0,
 fatigue:5,
 intensity:5,
 xp:0,
@@ -12,92 +12,95 @@ level:1
 };
 
 // =========================
-// GUARDAR ENTRENAMIENTO
+// IA CORE
 // =========================
 
-function saveTraining(){
-
-data.tkd = +tkd.value;
-data.strength = +strength.value;
-data.speed = +speed.value;
-data.flex = +flex.value;
-data.swim = +swim.value;
-data.bike = +bike.value;
-data.fatigue = +fatigue.value;
-data.intensity = +intensity.value;
-
-// XP
-let xpGain =
-data.tkd +
-data.strength +
-data.speed +
-data.flex;
-
-data.xp += xpGain;
-
-// LEVEL
-data.level = Math.floor(data.xp / 500) + 1;
-
-// SAVE
-localStorage.setItem("tkd_elite", JSON.stringify(data));
-
-// UPDATE
-updateSystem();
-checkAchievements();
-drawChart();
-}
-
-// =========================
-// IA COACH (MOTOR)
-// =========================
-
-function aiCoach(){
+function aiEngine(){
 
 let load =
-data.tkd + data.strength + data.speed +
-data.flex + data.swim + data.bike;
+data.forms +
+data.sparring +
+data.strength +
+data.speed +
+data.flex +
+data.endurance;
 
+// SCORE ATLETA (0–100)
 let score =
-load/10 +
+(load / 10) +
 (data.intensity * 3) -
 (data.fatigue * 4);
 
 score = Math.max(0, Math.min(100, Math.round(score)));
 
+// DECISION ENGINE
 let message = "";
 
 if(score < 40){
-message = "🟡 Baja carga - riesgo de desentreno";
+message = "🟡 Baja carga → recuperación activa recomendada";
 }
 else if(score < 70){
 message = "⚖️ Zona óptima de progreso";
 }
 else{
-message = "🔥 Alto rendimiento - cuidado sobrecarga";
+message = "🔥 Alto rendimiento → controlar fatiga";
 }
 
 if(data.fatigue >= 8){
-message += " | ⚠️ DESCARGA RECOMENDADA";
+message += " | ⚠️ DESCARGA NECESARIA";
 }
 
 if(data.speed < 30){
 message += " | ⚡ mejorar velocidad";
 }
 
-if(data.flex < 40){
-message += " | 🤸 mejorar movilidad";
+if(data.forms < 40){
+message += " | 🥋 mejorar formas ITF";
 }
 
 return {score, message};
 }
 
 // =========================
-// ACTUALIZAR SISTEMA
+// GUARDAR
 // =========================
 
-function updateSystem(){
+function saveTraining(){
 
-let ai = aiCoach();
+data.forms = +forms.value;
+data.sparring = +sparring.value;
+data.strength = +strength.value;
+data.speed = +speed.value;
+data.flex = +flex.value;
+data.endurance = +endurance.value;
+data.fatigue = +fatigue.value;
+data.intensity = +intensity.value;
+
+// XP SYSTEM
+data.xp +=
+data.forms +
+data.sparring +
+data.strength +
+data.speed +
+data.flex;
+
+// LEVEL SYSTEM
+data.level = Math.floor(data.xp / 500) + 1;
+
+localStorage.setItem("itf_elite", JSON.stringify(data));
+
+updateUI();
+updateChart();
+achievements();
+}
+
+// =========================
+// UI
+// =========================
+
+function updateUI(){
+
+let ai = aiEngine();
 
 document.getElementById("score").innerText = ai.score;
 document.getElementById("aiMessage").innerText = ai.message;
@@ -106,16 +109,15 @@ document.getElementById("level").innerText = data.level;
 document.getElementById("xp").innerText = data.xp;
 
 // MACROCICLO
-let month = new Date().getMonth();
+let m = new Date().getMonth();
 
-let cycle = "";
-
-if(month == 6) cycle = "Julio - Base";
-if(month == 7) cycle = "Agosto - Fuerza";
-if(month == 8) cycle = "Septiembre - Potencia";
-if(month == 9) cycle = "Octubre - Velocidad";
-if(month == 10) cycle = "Noviembre - Combate";
-if(month == 11) cycle = "Diciembre - Peak";
+let cycle =
+m==6?"Julio - Base ITF":
+m==7?"Agosto - Fuerza":
+m==8?"Septiembre - Potencia":
+m==9?"Octubre - Velocidad":
+m==10?"Noviembre - Combate":
+"Diciembre - Peak";
 
 document.getElementById("cycle").innerText = cycle;
 }
@@ -124,25 +126,24 @@ document.getElementById("cycle").innerText = cycle;
 // LOGROS
 // =========================
 
-function checkAchievements(){
+function achievements(){
 
 let list = document.getElementById("achievements");
 
 if(data.level >= 3){
-addAch("🥋 Nivel 3 alcanzado");
+add("🥋 Nivel 3 atleta ITF");
 }
 
-if(data.xp > 1000){
-addAch("⚡ 1000 XP acumulados");
+if(data.forms > 80){
+add("🌀 Formas avanzadas dominadas");
 }
 
-if(data.fatigue >= 9){
-addAch("🔥 Entreno extremo detectado");
+if(data.sparring > 80){
+add("🥊 Nivel competitivo sparring");
 }
 }
 
-function addAch(text){
-
+function add(text){
 let li = document.createElement("li");
 li.innerText = text;
 document.getElementById("achievements").appendChild(li);
@@ -152,22 +153,22 @@ document.getElementById("achievements").appendChild(li);
 // GRAFICO
 // =========================
 
-function drawChart(){
+function updateChart(){
 
 new Chart(chart,{
 
 type:"radar",
 
 data:{
-labels:["TKD","Fuerza","Velocidad","Flex","Natación","Bici"],
+labels:["Formas","Sparring","Fuerza","Velocidad","Flex","Resistencia"],
 datasets:[{
 data:[
-data.tkd,
+data.forms,
+data.sparring,
 data.strength,
 data.speed,
 data.flex,
-data.swim,
-data.bike
+data.endurance
 ],
 backgroundColor:"rgba(0,255,153,0.3)",
 borderColor:"#00ff99"
@@ -177,23 +178,18 @@ borderColor:"#00ff99"
 }
 
 // =========================
-// CARGAR DATOS
+// LOAD
 // =========================
 
 function load(){
 
-let saved = JSON.parse(localStorage.getItem("tkd_elite"));
-
+let saved = JSON.parse(localStorage.getItem("itf_elite"));
 if(saved) data = saved;
 
-updateSystem();
-drawChart();
+updateUI();
+updateChart();
 }
 
 // =========================
-// INIT
-// =========================
 
-window.onload = function(){
-load();
-};
+window.onload = load;

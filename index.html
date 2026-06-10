@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TKD Elite AI System 4.0</title>
+<title>ITF Elite Athlete System</title>
 
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,31 +13,31 @@
 <body>
 
 <header>
-<h1>🥋 TKD ELITE AI SYSTEM</h1>
-<p>Julio → Diciembre | Alto Rendimiento Inteligente</p>
+<h1>🥋 ITF ELITE SYSTEM</h1>
+<p>Atleta digital + IA + planificación profesional</p>
 </header>
 
-<!-- DASHBOARD -->
+<!-- ATHLETE STATUS -->
 <section class="grid">
 
 <div class="card">
-<h2>🎮 Nivel</h2>
+<h2>🎮 Nivel Atleta</h2>
 <h1 id="level">1</h1>
 <p>XP: <span id="xp">0</span></p>
 </div>
 
 <div class="card">
-<h2>🧠 Score Atleta</h2>
+<h2>🧠 Score IA</h2>
 <h1 id="score">0</h1>
 <p id="aiMessage">Analizando...</p>
 </div>
 
 </section>
 
-<!-- MACROCICLO -->
+<!-- CALENDARIO -->
 <section class="card">
 
-<h2>📅 Macrociclo</h2>
+<h2>📅 Macrociclo ITF</h2>
 <p id="cycle">Cargando...</p>
 
 <div class="bar">
@@ -51,8 +51,11 @@
 
 <h2>🧠 Entrenamiento diario</h2>
 
-<label>TKD</label>
-<input type="range" min="0" max="120" id="tkd">
+<label>Formas ITF</label>
+<input type="range" min="0" max="120" id="forms">
+
+<label>Sparring</label>
+<input type="range" min="0" max="120" id="sparring">
 
 <label>Fuerza</label>
 <input type="range" min="0" max="120" id="strength">
@@ -63,41 +66,33 @@
 <label>Flexibilidad</label>
 <input type="range" min="0" max="80" id="flex">
 
-<label>Natación</label>
-<input type="range" min="0" max="100" id="swim">
+<label>Resistencia</label>
+<input type="range" min="0" max="120" id="endurance">
 
-<label>Bicicleta</label>
-<input type="range" min="0" max="120" id="bike">
-
-<label>Fatiga</label>
+<label>Fatiga (1-10)</label>
 <input type="range" min="1" max="10" id="fatigue">
 
-<label>Intensidad</label>
+<label>Intensidad (1-10)</label>
 <input type="range" min="1" max="10" id="intensity">
 
-<button onclick="saveTraining()">💾 Guardar entrenamiento</button>
+<button onclick="saveTraining()">💾 Guardar sesión</button>
 
 </section>
 
-<!-- CHECKLIST -->
+<!-- STATUS PANEL -->
 <section class="card">
 
-<h2>📅 Actividades</h2>
+<h2>📊 Estado del atleta</h2>
 
-<label><input type="checkbox" value="tkd"> TKD</label>
-<label><input type="checkbox" value="combat"> Combate</label>
-<label><input type="checkbox" value="poomsae"> Poomsae</label>
-<label><input type="checkbox" value="strength"> Fuerza</label>
-<label><input type="checkbox" value="speed"> Velocidad</label>
-<label><input type="checkbox" value="flex"> Flexibilidad</label>
-<label><input type="checkbox" value="recovery"> Recuperación</label>
+<p><b>Interpretación IA:</b></p>
+<p id="aiFull"></p>
 
 </section>
 
 <!-- GRAFICO -->
 <section class="card">
 
-<h2>📊 Rendimiento</h2>
+<h2>📈 Rendimiento ITF</h2>
 <canvas id="chart"></canvas>
 
 </section>

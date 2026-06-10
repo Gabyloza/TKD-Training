@@ -4,104 +4,55 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ITF Elite Athlete System</title>
+<title>ITF AI COACH 6.0</title>
 
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
 <header>
-<h1>🥋 ITF ELITE SYSTEM</h1>
-<p>Atleta digital + IA + planificación profesional</p>
+<h1>🥋 ITF AI COACH 6.0</h1>
+<p>Atleta inteligente + planificación automática</p>
 </header>
 
-<!-- ATHLETE STATUS -->
-<section class="grid">
+<!-- PANEL IA -->
+<section class="card">
 
-<div class="card">
-<h2>🎮 Nivel Atleta</h2>
-<h1 id="level">1</h1>
-<p>XP: <span id="xp">0</span></p>
-</div>
-
-<div class="card">
-<h2>🧠 Score IA</h2>
-<h1 id="score">0</h1>
+<h2>🧠 Coach IA</h2>
 <p id="aiMessage">Analizando...</p>
-</div>
+
+<h2>📊 Estado del atleta</h2>
+<p id="status">—</p>
 
 </section>
 
 <!-- CALENDARIO -->
 <section class="card">
 
-<h2>📅 Macrociclo ITF</h2>
-<p id="cycle">Cargando...</p>
+<h2>📅 Calendario semanal</h2>
 
-<div class="bar">
-<div id="cycleBar"></div>
-</div>
+<div id="calendar"></div>
 
 </section>
 
-<!-- ENTRENAMIENTO -->
+<!-- DETALLE DÍA -->
 <section class="card">
 
-<h2>🧠 Entrenamiento diario</h2>
+<h2>📌 Sesión del día</h2>
 
-<label>Formas ITF</label>
-<input type="range" min="0" max="120" id="forms">
+<div id="dayDetail">Seleccioná un día</div>
 
-<label>Sparring</label>
-<input type="range" min="0" max="120" id="sparring">
-
-<label>Fuerza</label>
-<input type="range" min="0" max="120" id="strength">
-
-<label>Velocidad</label>
-<input type="range" min="0" max="80" id="speed">
-
-<label>Flexibilidad</label>
-<input type="range" min="0" max="80" id="flex">
-
-<label>Resistencia</label>
-<input type="range" min="0" max="120" id="endurance">
-
-<label>Fatiga (1-10)</label>
-<input type="range" min="1" max="10" id="fatigue">
-
-<label>Intensidad (1-10)</label>
-<input type="range" min="1" max="10" id="intensity">
-
-<button onclick="saveTraining()">💾 Guardar sesión</button>
+<button onclick="saveSession()">💾 Guardar sesión</button>
 
 </section>
 
-<!-- STATUS PANEL -->
+<!-- RESUMEN -->
 <section class="card">
 
-<h2>📊 Estado del atleta</h2>
+<h2>📊 Resumen semanal</h2>
 
-<p><b>Interpretación IA:</b></p>
-<p id="aiFull"></p>
-
-</section>
-
-<!-- GRAFICO -->
-<section class="card">
-
-<h2>📈 Rendimiento ITF</h2>
-<canvas id="chart"></canvas>
-
-</section>
-
-<!-- LOGROS -->
-<section class="card">
-
-<h2>🏆 Logros</h2>
-<ul id="achievements"></ul>
+<p id="weeklyReport"></p>
 
 </section>
 

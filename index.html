@@ -1,163 +1,118 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKD Performance Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="style.css">
+<title>TKD Performance PRO</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
 
 <header>
-    <h1>🥋 TKD Performance Tracker</h1>
-    <p>Objetivo: Cinturón Negro - Diciembre</p>
+<h1>🥋 TKD PERFORMANCE PRO</h1>
+<p>Julio → Diciembre | Cinturón Negro</p>
 </header>
 
-<section class="dashboard">
+<!-- DASHBOARD -->
+<section class="grid">
 
-    <div class="card">
-        <h2>📈 Progreso General</h2>
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <p id="progressText">0%</p>
-    </div>
+<div class="card">
+<h2>📊 Progreso</h2>
+<div class="bar">
+<div id="progress"></div>
+</div>
+<p id="progressText">0%</p>
+</div>
 
-    <div class="card">
-        <h2>🏆 Puntos</h2>
-        <p id="points">0</p>
-    </div>
-
-</section>
-
-<section class="calendar">
-
-    <h2>📅 Semana Actual</h2>
-
-    <table>
-
-        <tr>
-            <th>Día</th>
-            <th>Actividad</th>
-            <th>Estado</th>
-        </tr>
-
-        <tr>
-            <td>Lunes</td>
-            <td>Taekwondo</td>
-            <td>
-                <select class="activity">
-                    <option>Pendiente</option>
-                    <option>En progreso</option>
-                    <option>Completado</option>
-                </select>
-            </td>
-        </tr>
-
-        <tr>
-            <td>Lunes</td>
-            <td>Flexibilidad</td>
-            <td>
-                <select class="activity">
-                    <option>Pendiente</option>
-                    <option>En progreso</option>
-                    <option>Completado</option>
-                </select>
-            </td>
-        </tr>
-
-        <tr>
-            <td>Martes</td>
-            <td>Natación</td>
-            <td>
-                <select class="activity">
-                    <option>Pendiente</option>
-                    <option>En progreso</option>
-                    <option>Completado</option>
-                </select>
-            </td>
-        </tr>
-
-        <tr>
-            <td>Martes</td>
-            <td>Pliometría</td>
-            <td>
-                <select class="activity">
-                    <option>Pendiente</option>
-                    <option>En progreso</option>
-                    <option>Completado</option>
-                </select>
-            </td>
-        </tr>
-
-        <tr>
-            <td>Miércoles</td>
-            <td>Taekwondo</td>
-            <td>
-                <select class="activity">
-                    <option>Pendiente</option>
-                    <option>En progreso</option>
-                    <option>Completado</option>
-                </select>
-            </td>
-        </tr>
-
-    </table>
-
-    <button onclick="updateProgress()">
-        Actualizar Progreso
-    </button>
+<div class="card">
+<h2>🏆 Puntos</h2>
+<h1 id="points">0</h1>
+</div>
 
 </section>
 
-<section class="stats">
+<!-- ENTRENAMIENTO DIARIO -->
+<section class="card">
 
-    <h2>📊 Capacidades</h2>
+<h2>🧠 Entrenamiento del día</h2>
 
-    <canvas id="skillsChart"></canvas>
+<div id="training">
 
-</section>
+<label>TKD</label>
+<input type="range" min="0" max="120" value="0" class="slider" id="tkd">
 
-<section class="journal">
+<label>Fuerza</label>
+<input type="range" min="0" max="120" value="0" class="slider" id="strength">
 
-    <h2>📝 Diario del Atleta</h2>
+<label>Velocidad</label>
+<input type="range" min="0" max="60" value="0" class="slider" id="speed">
 
-    <label>Sueño (horas)</label>
-    <input type="number" id="sleep">
+<label>Flexibilidad</label>
+<input type="range" min="0" max="60" value="0" class="slider" id="flex">
 
-    <label>Peso</label>
-    <input type="number" id="weight">
+<label>Natación</label>
+<input type="range" min="0" max="90" value="0" class="slider" id="swim">
 
-    <label>Motivación (1-5)</label>
-    <input type="number" id="motivation">
+<label>Bicicleta</label>
+<input type="range" min="0" max="120" value="0" class="slider" id="bike">
 
-    <label>Fatiga (1-5)</label>
-    <input type="number" id="fatigue">
+</div>
 
-    <label>Notas</label>
-    <textarea id="notes"></textarea>
+<br>
 
-    <button onclick="saveJournal()">
-        Guardar Diario
-    </button>
+<label>Intensidad</label>
+<input type="range" min="1" max="10" value="5" id="intensity">
 
-</section>
+<p>Fatiga</p>
+<input type="range" min="1" max="10" value="5" id="fatigue">
 
-<section class="achievements">
-
-    <h2>🏅 Logros</h2>
-
-    <ul id="achievementList">
-        <li>🎯 Completá tu primera actividad</li>
-    </ul>
+<button onclick="saveDay()">💾 Guardar día</button>
 
 </section>
 
-<script src="app.js" defer></script>
+<!-- CHECKLIST -->
+<section class="card">
+
+<h2>📅 Actividades</h2>
+
+<div class="checklist">
+
+<label><input type="checkbox" class="act" value="tkd"> TKD</label>
+<label><input type="checkbox" class="act" value="combat"> Combate</label>
+<label><input type="checkbox" class="act" value="poomsae"> Poomsae</label>
+<label><input type="checkbox" class="act" value="strength"> Fuerza</label>
+<label><input type="checkbox" class="act" value="speed"> Velocidad</label>
+<label><input type="checkbox" class="act" value="flex"> Flexibilidad</label>
+<label><input type="checkbox" class="act" value="recovery"> Recuperación</label>
+
+</div>
+
+</section>
+
+<!-- GRAFICO -->
+<section class="card">
+
+<h2>📈 Rendimiento</h2>
+
+<canvas id="chart"></canvas>
+
+</section>
+
+<!-- LOGROS -->
+<section class="card">
+
+<h2>🏅 Logros</h2>
+
+<ul id="achievements"></ul>
+
+</section>
+
+<script src="app.js"></script>
 
 </body>
 </html>

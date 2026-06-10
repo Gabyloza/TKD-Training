@@ -2,10 +2,10 @@
 // CARGA INICIAL
 // ======================
 
-window.onload = function () {
+document.addEventListener("DOMContentLoaded", () => {
     loadData();
-    createChart();
-};
+    setTimeout(createChart, 200);
+});
 
 // ======================
 // ACTUALIZAR PROGRESO
@@ -209,10 +209,11 @@ function unlockAchievements(completed){
 
 function createChart(){
 
-    const ctx =
-        document.getElementById("skillsChart");
+    const canvas = document.getElementById("skillsChart");
 
-    new Chart(ctx,{
+    if(!canvas) return;
+
+    new Chart(canvas,{
 
         type:"radar",
 
@@ -227,28 +228,16 @@ function createChart(){
             ],
 
             datasets:[{
-
                 label:"Nivel",
-
-                data:[
-                    60,
-                    50,
-                    70,
-                    75,
-                    65
-                ],
-
-                backgroundColor:
-                    "rgba(76,175,80,.3)",
-
-                borderColor:
-                    "#4CAF50",
-
+                data:[60,50,70,75,65],
+                backgroundColor:"rgba(76,175,80,.3)",
+                borderColor:"#4CAF50",
                 borderWidth:2
             }]
         },
 
         options:{
+            responsive:true,
             scales:{
                 r:{
                     beginAtZero:true,

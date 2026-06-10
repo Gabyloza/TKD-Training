@@ -1,1 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TKD Performance Tracker</title>
 
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header>
+    <h1>🥋 TKD Performance Tracker</h1>
+    <p>Objetivo: Cinturón Negro - Diciembre</p>
+</header>
+
+<section class="dashboard">
+
+    <div class="card">
+        <h2>📈 Progreso General</h2>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p id="progressText">0%</p>
+    </div>
+
+    <div class="card">
+        <h2>🏆 Puntos</h2>
+        <p id="points">0</p>
+    </div>
+
+</section>
+
+<section class="calendar">
+
+    <h2>📅 Semana Actual</h2>
+
+    <table>
+
+        <tr>
+            <th>Día</th>
+            <th>Actividad</th>
+            <th>Estado</th>
+        </tr>
+
+        <tr>
+            <td>Lunes</td>
+            <td>Taekwondo</td>
+            <td>
+                <select class="activity">
+                    <option>Pendiente</option>
+                    <option>En progreso</option>
+                    <option>Completado</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Lunes</td>
+            <td>Flexibilidad</td>
+            <td>
+                <select class="activity">
+                    <option>Pendiente</option>
+                    <option>En progreso</option>
+                    <option>Completado</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Martes</td>
+            <td>Natación</td>
+            <td>
+                <select class="activity">
+                    <option>Pendiente</option>
+                    <option>En progreso</option>
+                    <option>Completado</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Martes</td>
+            <td>Pliometría</td>
+            <td>
+                <select class="activity">
+                    <option>Pendiente</option>
+                    <option>En progreso</option>
+                    <option>Completado</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Miércoles</td>
+            <td>Taekwondo</td>
+            <td>
+                <select class="activity">
+                    <option>Pendiente</option>
+                    <option>En progreso</option>
+                    <option>Completado</option>
+                </select>
+            </td>
+        </tr>
+
+    </table>
+
+    <button onclick="updateProgress()">
+        Actualizar Progreso
+    </button>
+
+</section>
+
+<section class="stats">
+
+    <h2>📊 Capacidades</h2>
+
+    <canvas id="skillsChart"></canvas>
+
+</section>
+
+<section class="journal">
+
+    <h2>📝 Diario del Atleta</h2>
+
+    <label>Sueño (horas)</label>
+    <input type="number" id="sleep">
+
+    <label>Peso</label>
+    <input type="number" id="weight">
+
+    <label>Motivación (1-5)</label>
+    <input type="number" id="motivation">
+
+    <label>Fatiga (1-5)</label>
+    <input type="number" id="fatigue">
+
+    <label>Notas</label>
+    <textarea id="notes"></textarea>
+
+    <button onclick="saveJournal()">
+        Guardar Diario
+    </button>
+
+</section>
+
+<section class="achievements">
+
+    <h2>🏅 Logros</h2>
+
+    <ul id="achievementList">
+        <li>🎯 Completá tu primera actividad</li>
+    </ul>
+
+</section>
+
+<script src="app.js"></script>
+
+</body>
+</html>

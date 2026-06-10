@@ -4,91 +4,98 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TKD Performance PRO</title>
+<title>TKD Elite Performance System</title>
 
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
 <body>
 
 <header>
-<h1>🥋 TKD PERFORMANCE PRO</h1>
-<p>Julio → Diciembre | Cinturón Negro</p>
+<h1>🥋 TKD ELITE SYSTEM</h1>
+<p>Julio → Diciembre | Alto Rendimiento</p>
 </header>
 
-<!-- DASHBOARD -->
+<!-- NIVEL + XP -->
 <section class="grid">
 
 <div class="card">
-<h2>📊 Progreso</h2>
-<div class="bar">
-<div id="progress"></div>
-</div>
-<p id="progressText">0%</p>
+<h2>🎮 Nivel Atleta</h2>
+<h1 id="level">1</h1>
+<p>XP: <span id="xp">0</span></p>
 </div>
 
 <div class="card">
-<h2>🏆 Puntos</h2>
-<h1 id="points">0</h1>
+<h2>📊 Carga semanal</h2>
+<h1 id="load">0</h1>
+<p id="loadStatus">Sin datos</p>
 </div>
 
 </section>
 
-<!-- ENTRENAMIENTO DIARIO -->
+<!-- MACROCICLO -->
 <section class="card">
 
-<h2>🧠 Entrenamiento del día</h2>
+<h2>📅 Macrociclo</h2>
 
-<div id="training">
+<p id="cycle">Julio - Base</p>
+
+<div class="bar">
+<div id="cycleBar"></div>
+</div>
+
+</section>
+
+<!-- ENTRENAMIENTO -->
+<section class="card">
+
+<h2>🧠 Entrenamiento diario</h2>
 
 <label>TKD</label>
-<input type="range" min="0" max="120" value="0" class="slider" id="tkd">
+<input type="range" min="0" max="120" id="tkd">
 
 <label>Fuerza</label>
-<input type="range" min="0" max="120" value="0" class="slider" id="strength">
+<input type="range" min="0" max="120" id="strength">
 
 <label>Velocidad</label>
-<input type="range" min="0" max="60" value="0" class="slider" id="speed">
+<input type="range" min="0" max="80" id="speed">
 
 <label>Flexibilidad</label>
-<input type="range" min="0" max="60" value="0" class="slider" id="flex">
+<input type="range" min="0" max="80" id="flex">
 
 <label>Natación</label>
-<input type="range" min="0" max="90" value="0" class="slider" id="swim">
+<input type="range" min="0" max="100" id="swim">
 
 <label>Bicicleta</label>
-<input type="range" min="0" max="120" value="0" class="slider" id="bike">
-
-</div>
+<input type="range" min="0" max="120" id="bike">
 
 <br>
 
-<label>Intensidad</label>
-<input type="range" min="1" max="10" value="5" id="intensity">
+<label>Fatiga (1-10)</label>
+<input type="range" min="1" max="10" id="fatigue">
 
-<p>Fatiga</p>
-<input type="range" min="1" max="10" value="5" id="fatigue">
+<label>Intensidad (1-10)</label>
+<input type="range" min="1" max="10" id="intensity">
 
-<button onclick="saveDay()">💾 Guardar día</button>
+<button onclick="saveTraining()">💾 Guardar entrenamiento</button>
 
 </section>
 
 <!-- CHECKLIST -->
 <section class="card">
 
-<h2>📅 Actividades</h2>
+<h2>📅 Actividades realizadas</h2>
 
-<div class="checklist">
+<div class="check">
 
-<label><input type="checkbox" class="act" value="tkd"> TKD</label>
-<label><input type="checkbox" class="act" value="combat"> Combate</label>
-<label><input type="checkbox" class="act" value="poomsae"> Poomsae</label>
-<label><input type="checkbox" class="act" value="strength"> Fuerza</label>
-<label><input type="checkbox" class="act" value="speed"> Velocidad</label>
-<label><input type="checkbox" class="act" value="flex"> Flexibilidad</label>
-<label><input type="checkbox" class="act" value="recovery"> Recuperación</label>
+<label><input type="checkbox" value="tkd"> TKD</label>
+<label><input type="checkbox" value="combat"> Combate</label>
+<label><input type="checkbox" value="poomsae"> Poomsae</label>
+<label><input type="checkbox" value="strength"> Fuerza</label>
+<label><input type="checkbox" value="speed"> Velocidad</label>
+<label><input type="checkbox" value="flex"> Flexibilidad</label>
+<label><input type="checkbox" value="recovery"> Recuperación</label>
 
 </div>
 
@@ -98,7 +105,6 @@
 <section class="card">
 
 <h2>📈 Rendimiento</h2>
-
 <canvas id="chart"></canvas>
 
 </section>
@@ -106,8 +112,7 @@
 <!-- LOGROS -->
 <section class="card">
 
-<h2>🏅 Logros</h2>
-
+<h2>🏆 Logros</h2>
 <ul id="achievements"></ul>
 
 </section>

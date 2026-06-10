@@ -1,195 +1,158 @@
-let data = {
-forms:0,
-sparring:0,
-strength:0,
-speed:0,
-flex:0,
-endurance:0,
-fatigue:5,
-intensity:5,
+let selectedDay = null;
+
+let data = JSON.parse(localStorage.getItem("itf6")) || {
+days:{},
 xp:0,
-level:1
+fatigue:5
 };
 
-// =========================
-// IA CORE
-// =========================
+// =====================
+// CALENDARIO
+// =====================
+
+function initCalendar(){
+
+let calendar = document.getElementById("calendar");
+
+let days = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
+
+days.forEach((d,i)=>{
+
+let div = document.createElement("div");
+div.className="day";
+div.innerText=d;
+
+div.onclick=()=>selectDay(d,div);
+
+calendar.appendChild(div);
+});
+
+updateAI();
+updateWeekly();
+}
+
+// =====================
+// SELECCIONAR DÍA
+// =====================
+
+function selectDay(day,el){
+
+selectedDay = day;
+
+document.querySelectorAll(".day").forEach(d=>d.classList.remove("active"));
+el.classList.add("active");
+
+let session = data.days[day] || {
+tkd:false,
+sparring:false,
+strength:false,
+speed:false,
+flex:false,
+run:false
+};
+
+document.getElementById("dayDetail").innerHTML = `
+<label><input type="checkbox" id="tkd" ${session.tkd?"checked":""}> Formas ITF</label><br>
+<label><input type="checkbox" id="sparring" ${session.sparring?"checked":""}> Sparring</label><br>
+<label><input type="checkbox" id="strength"> Fuerza</label><br>
+<label><input type="checkbox" id="speed"> Velocidad</label><br>
+<label><input type="checkbox" id="flex"> Flexibilidad</label><br>
+<label><input type="checkbox" id="run"> Resistencia</label>
+`;
+}
+
+// =====================
+// GUARDAR SESIÓN
+// =====================
+
+function saveSession(){
+
+if(!selectedDay) return;
+
+let session = {
+tkd:tkd.checked,
+sparring:sparring.checked,
+strength:strength.checked,
+speed:speed.checked,
+flex:flex.checked,
+run:run.checked
+};
+
+data.days[selectedDay] = session;
+
+// XP SYSTEM
+data.xp += Object.values(session).filter(Boolean).length * 20;
+
+// FATIGA SIMPLE
+data.fatigue += Object.values(session).filter(Boolean).length;
+
+localStorage.setItem("itf6", JSON.stringify(data));
+
+updateAI();
+updateWeekly();
+}
+
+// =====================
+// IA COACH
+// =====================
 
 function aiEngine(){
 
-let load =
-data.forms +
-data.sparring +
-data.strength +
-data.speed +
-data.flex +
-data.endurance;
+let totalDays = Object.keys(data.days).length;
 
-// SCORE ATLETA (0–100)
-let score =
-(load / 10) +
-(data.intensity * 3) -
-(data.fatigue * 4);
+let active = Object.values(data.days)
+.flatMap(d=>Object.values(d))
+.filter(Boolean).length;
 
-score = Math.max(0, Math.min(100, Math.round(score)));
+let score = Math.min(100, active * 8 - data.fatigue * 3);
 
-// DECISION ENGINE
 let message = "";
 
 if(score < 40){
-message = "🟡 Baja carga → recuperación activa recomendada";
+message="🟡 Baja carga → falta estímulo";
 }
 else if(score < 70){
-message = "⚖️ Zona óptima de progreso";
+message="⚖️ Zona óptima";
 }
 else{
-message = "🔥 Alto rendimiento → controlar fatiga";
+message="🔥 Alto rendimiento";
 }
 
-if(data.fatigue >= 8){
-message += " | ⚠️ DESCARGA NECESARIA";
+if(data.fatigue > 15){
+message += " | ⚠️ DESCARGA RECOMENDADA";
 }
 
-if(data.speed < 30){
-message += " | ⚡ mejorar velocidad";
+return {score,message};
 }
 
-if(data.forms < 40){
-message += " | 🥋 mejorar formas ITF";
-}
+// =====================
+// UPDATE IA
+// =====================
 
-return {score, message};
-}
-
-// =========================
-// GUARDAR
-// =========================
-
-function saveTraining(){
-
-data.forms = +forms.value;
-data.sparring = +sparring.value;
-data.strength = +strength.value;
-data.speed = +speed.value;
-data.flex = +flex.value;
-data.endurance = +endurance.value;
-data.fatigue = +fatigue.value;
-data.intensity = +intensity.value;
-
-// XP SYSTEM
-data.xp +=
-data.forms +
-data.sparring +
-data.strength +
-data.speed +
-data.flex;
-
-// LEVEL SYSTEM
-data.level = Math.floor(data.xp / 500) + 1;
-
-localStorage.setItem("itf_elite", JSON.stringify(data));
-
-updateUI();
-updateChart();
-achievements();
-}
-
-// =========================
-// UI
-// =========================
-
-function updateUI(){
+function updateAI(){
 
 let ai = aiEngine();
 
-document.getElementById("score").innerText = ai.score;
 document.getElementById("aiMessage").innerText = ai.message;
 
-document.getElementById("level").innerText = data.level;
-document.getElementById("xp").innerText = data.xp;
-
-// MACROCICLO
-let m = new Date().getMonth();
-
-let cycle =
-m==6?"Julio - Base ITF":
-m==7?"Agosto - Fuerza":
-m==8?"Septiembre - Potencia":
-m==9?"Octubre - Velocidad":
-m==10?"Noviembre - Combate":
-"Diciembre - Peak";
-
-document.getElementById("cycle").innerText = cycle;
+document.getElementById("status").innerText =
+"Score atleta: " + ai.score + " | XP: " + data.xp;
 }
 
-// =========================
-// LOGROS
-// =========================
+// =====================
+// RESUMEN SEMANAL
+// =====================
 
-function achievements(){
+function updateWeekly(){
 
-let list = document.getElementById("achievements");
+let count = Object.keys(data.days).length;
 
-if(data.level >= 3){
-add("🥋 Nivel 3 atleta ITF");
+document.getElementById("weeklyReport").innerText =
+`Días activos: ${count} | XP total: ${data.xp} | Fatiga: ${data.fatigue}`;
 }
 
-if(data.forms > 80){
-add("🌀 Formas avanzadas dominadas");
-}
+// =====================
+// INIT
+// =====================
 
-if(data.sparring > 80){
-add("🥊 Nivel competitivo sparring");
-}
-}
-
-function add(text){
-let li = document.createElement("li");
-li.innerText = text;
-document.getElementById("achievements").appendChild(li);
-}
-
-// =========================
-// GRAFICO
-// =========================
-
-function updateChart(){
-
-new Chart(chart,{
-
-type:"radar",
-
-data:{
-labels:["Formas","Sparring","Fuerza","Velocidad","Flex","Resistencia"],
-datasets:[{
-data:[
-data.forms,
-data.sparring,
-data.strength,
-data.speed,
-data.flex,
-data.endurance
-],
-backgroundColor:"rgba(0,255,153,0.3)",
-borderColor:"#00ff99"
-}]
-}
-});
-}
-
-// =========================
-// LOAD
-// =========================
-
-function load(){
-
-let saved = JSON.parse(localStorage.getItem("itf_elite"));
-if(saved) data = saved;
-
-updateUI();
-updateChart();
-}
-
-// =========================
-
-window.onload = load;
+window.onload = initCalendar;

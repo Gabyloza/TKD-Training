@@ -1,45 +1,47 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0b0b0b;
+background:#0a0a0a;
 color:white;
-padding:15px;
 }
 
 header{
 text-align:center;
-margin-bottom:20px;
+padding:10px;
 }
 
-h1{color:#00ff99}
+nav button{
+margin:5px;
+padding:10px;
+background:#00ff99;
+border:none;
+border-radius:8px;
+}
+
+.page{
+display:none;
+padding:15px;
+}
+
+.page.active{
+display:block;
+}
+
+input, textarea{
+width:100%;
+margin:5px 0;
+padding:8px;
+border-radius:6px;
+border:none;
+}
+
+textarea{
+height:80px;
+}
 
 .card{
 background:#161616;
-padding:15px;
-border-radius:15px;
-margin-bottom:15px;
-}
-
-input{
-width:100%;
-margin-bottom:10px;
-padding:8px;
-border-radius:8px;
-border:none;
-}
-
-button{
-width:100%;
-padding:12px;
-background:#00ff99;
-border:none;
-border-radius:10px;
-font-weight:bold;
-}
-
-.session{
-background:#222;
 padding:10px;
-margin:5px 0;
-border-radius:8px;
+border-radius:10px;
+margin:10px 0;
 }

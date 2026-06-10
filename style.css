@@ -1,1 +1,150 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, sans-serif;
+}
 
+body{
+    background:#121212;
+    color:white;
+    padding:20px;
+}
+
+header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+header h1{
+    color:#4CAF50;
+    margin-bottom:10px;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.card{
+    background:#1e1e1e;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px rgba(0,0,0,.4);
+}
+
+.progress-container{
+    width:100%;
+    height:25px;
+    background:#333;
+    border-radius:15px;
+    overflow:hidden;
+    margin-top:10px;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#00c853,#64dd17);
+    transition:.5s;
+}
+
+.calendar,
+.stats,
+.journal,
+.achievements{
+    background:#1e1e1e;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:25px;
+    box-shadow:0 0 10px rgba(0,0,0,.4);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th{
+    background:#2d2d2d;
+    color:#4CAF50;
+}
+
+td,th{
+    padding:12px;
+    border:1px solid #333;
+}
+
+select,
+input,
+textarea{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    background:#2d2d2d;
+    color:white;
+    margin-top:5px;
+    margin-bottom:15px;
+}
+
+textarea{
+    min-height:120px;
+}
+
+button{
+    background:#4CAF50;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.3s;
+}
+
+button:hover{
+    background:#43a047;
+}
+
+#points{
+    font-size:40px;
+    color:#FFD54F;
+    text-align:center;
+    margin-top:15px;
+}
+
+h2{
+    margin-bottom:15px;
+    color:#64dd17;
+}
+
+ul{
+    list-style:none;
+}
+
+li{
+    padding:10px;
+    background:#2d2d2d;
+    margin-bottom:10px;
+    border-radius:10px;
+}
+
+@media(max-width:768px){
+
+    body{
+        padding:10px;
+    }
+
+    table{
+        font-size:12px;
+    }
+
+    h1{
+        font-size:24px;
+    }
+
+}

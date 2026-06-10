@@ -1,40 +1,54 @@
-let sessions = JSON.parse(localStorage.getItem("sessions")) || [];
+let data = JSON.parse(localStorage.getItem("itf8")) || {
+sessions:[]
+};
 
 // =====================
-// GUARDAR SESIÓN
+// NAVIGATION
 // =====================
 
-function saveSession(){
+function show(page){
+
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+
+document.getElementById(page).classList.add("active");
+
+update();
+}
+
+// =====================
+// SAVE SESSION
+// =====================
+
+function save(){
 
 let session = {
-date: new Date().toLocaleDateString(),
+date:new Date().toLocaleDateString(),
 forms:+forms.value,
 sparring:+sparring.value,
 strength:+strength.value,
 speed:+speed.value,
 flex:+flex.value,
-endurance:+endurance.value
+endurance:+endurance.value,
+notes:notes.value
 };
 
-sessions.push(session);
+data.sessions.push(session);
 
-localStorage.setItem("sessions", JSON.stringify(sessions));
+localStorage.setItem("itf8", JSON.stringify(data));
 
 update();
 drawChart();
 }
 
 // =====================
-// IA COACH
+// IA COACH REAL
 // =====================
 
 function ai(){
 
-if(sessions.length === 0){
-return "Sin datos aún";
-}
+if(data.sessions.length === 0) return "Sin datos";
 
-let last = sessions[sessions.length - 1];
+let last = data.sessions[data.sessions.length - 1];
 
 let load =
 last.forms + last.sparring + last.strength +
@@ -42,41 +56,17 @@ last.speed + last.flex + last.endurance;
 
 if(load < 40) return "🟡 Baja carga";
 if(load < 80) return "⚖️ Óptimo";
-return "🔥 Alta carga (cuidado)";
+return "🔥 Alta carga";
+
 }
 
 // =====================
-// HISTORIAL
-// =====================
-
-function updateHistory(){
-
-let div = document.getElementById("history");
-
-div.innerHTML = "";
-
-sessions.slice().reverse().forEach(s=>{
-
-div.innerHTML += `
-<div class="session">
-📅 ${s.date}<br>
-🥋 Forms: ${s.forms} | 🥊 Sparring: ${s.sparring}<br>
-💪 Fuerza: ${s.strength} | ⚡ Velocidad: ${s.speed}<br>
-🤸 Flex: ${s.flex} | 🏃 Resistencia: ${s.endurance}
-</div>
-`;
-});
-}
-
-// =====================
-// GRAFICO REAL (EVOLUCIÓN)
+// CHART EVOLUCIÓN
 // =====================
 
 function drawChart(){
 
-let labels = sessions.map(s=>s.date);
-
-let data = sessions.map(s=>
+let values = data.sessions.map(s=>
 s.forms + s.sparring + s.strength +
 s.speed + s.flex + s.endurance
 );
@@ -86,30 +76,55 @@ new Chart(chart,{
 type:"line",
 
 data:{
-labels:labels,
+labels:data.sessions.map(s=>s.date),
 datasets:[{
-label:"Progreso total",
-data:data,
+label:"Progreso",
+data:values,
 borderColor:"#00ff99"
 }]
 }
+
 });
+
 }
 
 // =====================
-// UI UPDATE
+// HISTORIAL
+// =====================
+
+function history(){
+
+let div = document.getElementById("list");
+
+div.innerHTML = "";
+
+data.sessions.slice().reverse().forEach(s=>{
+
+div.innerHTML += `
+<div class="card">
+📅 ${s.date}<br>
+🥋 ${s.forms} | 🥊 ${s.sparring}<br>
+💪 ${s.strength} | ⚡ ${s.speed}<br>
+🤸 ${s.flex} | 🏃 ${s.endurance}<br>
+📝 ${s.notes || "Sin notas"}
+</div>
+`;
+
+});
+
+}
+
+// =====================
+// UPDATE
 // =====================
 
 function update(){
 
-document.getElementById("aiMessage").innerText = ai();
+document.getElementById("ai").innerText = ai();
 
-updateHistory();
+history();
 }
 
 // =====================
 
-window.onload = function(){
-update();
-drawChart();
-};
+window.onload = update;

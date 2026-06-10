@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TKD Elite Performance System</title>
+<title>TKD Elite AI System 4.0</title>
 
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,23 +13,23 @@
 <body>
 
 <header>
-<h1>🥋 TKD ELITE SYSTEM</h1>
-<p>Julio → Diciembre | Alto Rendimiento</p>
+<h1>🥋 TKD ELITE AI SYSTEM</h1>
+<p>Julio → Diciembre | Alto Rendimiento Inteligente</p>
 </header>
 
-<!-- NIVEL + XP -->
+<!-- DASHBOARD -->
 <section class="grid">
 
 <div class="card">
-<h2>🎮 Nivel Atleta</h2>
+<h2>🎮 Nivel</h2>
 <h1 id="level">1</h1>
 <p>XP: <span id="xp">0</span></p>
 </div>
 
 <div class="card">
-<h2>📊 Carga semanal</h2>
-<h1 id="load">0</h1>
-<p id="loadStatus">Sin datos</p>
+<h2>🧠 Score Atleta</h2>
+<h1 id="score">0</h1>
+<p id="aiMessage">Analizando...</p>
 </div>
 
 </section>
@@ -38,8 +38,7 @@
 <section class="card">
 
 <h2>📅 Macrociclo</h2>
-
-<p id="cycle">Julio - Base</p>
+<p id="cycle">Cargando...</p>
 
 <div class="bar">
 <div id="cycleBar"></div>
@@ -70,12 +69,10 @@
 <label>Bicicleta</label>
 <input type="range" min="0" max="120" id="bike">
 
-<br>
-
-<label>Fatiga (1-10)</label>
+<label>Fatiga</label>
 <input type="range" min="1" max="10" id="fatigue">
 
-<label>Intensidad (1-10)</label>
+<label>Intensidad</label>
 <input type="range" min="1" max="10" id="intensity">
 
 <button onclick="saveTraining()">💾 Guardar entrenamiento</button>
@@ -85,9 +82,7 @@
 <!-- CHECKLIST -->
 <section class="card">
 
-<h2>📅 Actividades realizadas</h2>
-
-<div class="check">
+<h2>📅 Actividades</h2>
 
 <label><input type="checkbox" value="tkd"> TKD</label>
 <label><input type="checkbox" value="combat"> Combate</label>
@@ -97,14 +92,12 @@
 <label><input type="checkbox" value="flex"> Flexibilidad</label>
 <label><input type="checkbox" value="recovery"> Recuperación</label>
 
-</div>
-
 </section>
 
 <!-- GRAFICO -->
 <section class="card">
 
-<h2>📈 Rendimiento</h2>
+<h2>📊 Rendimiento</h2>
 <canvas id="chart"></canvas>
 
 </section>

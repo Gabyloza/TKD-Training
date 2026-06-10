@@ -1,65 +1,4 @@
-let selectedDay = null;
-
-let data = JSON.parse(localStorage.getItem("itf6")) || {
-days:{},
-xp:0,
-fatigue:5
-};
-
-// =====================
-// CALENDARIO
-// =====================
-
-function initCalendar(){
-
-let calendar = document.getElementById("calendar");
-
-let days = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
-
-days.forEach((d,i)=>{
-
-let div = document.createElement("div");
-div.className="day";
-div.innerText=d;
-
-div.onclick=()=>selectDay(d,div);
-
-calendar.appendChild(div);
-});
-
-updateAI();
-updateWeekly();
-}
-
-// =====================
-// SELECCIONAR DÍA
-// =====================
-
-function selectDay(day,el){
-
-selectedDay = day;
-
-document.querySelectorAll(".day").forEach(d=>d.classList.remove("active"));
-el.classList.add("active");
-
-let session = data.days[day] || {
-tkd:false,
-sparring:false,
-strength:false,
-speed:false,
-flex:false,
-run:false
-};
-
-document.getElementById("dayDetail").innerHTML = `
-<label><input type="checkbox" id="tkd" ${session.tkd?"checked":""}> Formas ITF</label><br>
-<label><input type="checkbox" id="sparring" ${session.sparring?"checked":""}> Sparring</label><br>
-<label><input type="checkbox" id="strength"> Fuerza</label><br>
-<label><input type="checkbox" id="speed"> Velocidad</label><br>
-<label><input type="checkbox" id="flex"> Flexibilidad</label><br>
-<label><input type="checkbox" id="run"> Resistencia</label>
-`;
-}
+let sessions = JSON.parse(localStorage.getItem("sessions")) || [];
 
 // =====================
 // GUARDAR SESIÓN
@@ -67,92 +6,110 @@ document.getElementById("dayDetail").innerHTML = `
 
 function saveSession(){
 
-if(!selectedDay) return;
-
 let session = {
-tkd:tkd.checked,
-sparring:sparring.checked,
-strength:strength.checked,
-speed:speed.checked,
-flex:flex.checked,
-run:run.checked
+date: new Date().toLocaleDateString(),
+forms:+forms.value,
+sparring:+sparring.value,
+strength:+strength.value,
+speed:+speed.value,
+flex:+flex.value,
+endurance:+endurance.value
 };
 
-data.days[selectedDay] = session;
+sessions.push(session);
 
-// XP SYSTEM
-data.xp += Object.values(session).filter(Boolean).length * 20;
+localStorage.setItem("sessions", JSON.stringify(sessions));
 
-// FATIGA SIMPLE
-data.fatigue += Object.values(session).filter(Boolean).length;
-
-localStorage.setItem("itf6", JSON.stringify(data));
-
-updateAI();
-updateWeekly();
+update();
+drawChart();
 }
 
 // =====================
 // IA COACH
 // =====================
 
-function aiEngine(){
+function ai(){
 
-let totalDays = Object.keys(data.days).length;
-
-let active = Object.values(data.days)
-.flatMap(d=>Object.values(d))
-.filter(Boolean).length;
-
-let score = Math.min(100, active * 8 - data.fatigue * 3);
-
-let message = "";
-
-if(score < 40){
-message="🟡 Baja carga → falta estímulo";
-}
-else if(score < 70){
-message="⚖️ Zona óptima";
-}
-else{
-message="🔥 Alto rendimiento";
+if(sessions.length === 0){
+return "Sin datos aún";
 }
 
-if(data.fatigue > 15){
-message += " | ⚠️ DESCARGA RECOMENDADA";
-}
+let last = sessions[sessions.length - 1];
 
-return {score,message};
+let load =
+last.forms + last.sparring + last.strength +
+last.speed + last.flex + last.endurance;
+
+if(load < 40) return "🟡 Baja carga";
+if(load < 80) return "⚖️ Óptimo";
+return "🔥 Alta carga (cuidado)";
 }
 
 // =====================
-// UPDATE IA
+// HISTORIAL
 // =====================
 
-function updateAI(){
+function updateHistory(){
 
-let ai = aiEngine();
+let div = document.getElementById("history");
 
-document.getElementById("aiMessage").innerText = ai.message;
+div.innerHTML = "";
 
-document.getElementById("status").innerText =
-"Score atleta: " + ai.score + " | XP: " + data.xp;
+sessions.slice().reverse().forEach(s=>{
+
+div.innerHTML += `
+<div class="session">
+📅 ${s.date}<br>
+🥋 Forms: ${s.forms} | 🥊 Sparring: ${s.sparring}<br>
+💪 Fuerza: ${s.strength} | ⚡ Velocidad: ${s.speed}<br>
+🤸 Flex: ${s.flex} | 🏃 Resistencia: ${s.endurance}
+</div>
+`;
+});
 }
 
 // =====================
-// RESUMEN SEMANAL
+// GRAFICO REAL (EVOLUCIÓN)
 // =====================
 
-function updateWeekly(){
+function drawChart(){
 
-let count = Object.keys(data.days).length;
+let labels = sessions.map(s=>s.date);
 
-document.getElementById("weeklyReport").innerText =
-`Días activos: ${count} | XP total: ${data.xp} | Fatiga: ${data.fatigue}`;
+let data = sessions.map(s=>
+s.forms + s.sparring + s.strength +
+s.speed + s.flex + s.endurance
+);
+
+new Chart(chart,{
+
+type:"line",
+
+data:{
+labels:labels,
+datasets:[{
+label:"Progreso total",
+data:data,
+borderColor:"#00ff99"
+}]
+}
+});
 }
 
 // =====================
-// INIT
+// UI UPDATE
 // =====================
 
-window.onload = initCalendar;
+function update(){
+
+document.getElementById("aiMessage").innerText = ai();
+
+updateHistory();
+}
+
+// =====================
+
+window.onload = function(){
+update();
+drawChart();
+};

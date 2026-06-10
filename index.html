@@ -4,55 +4,70 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ITF AI COACH 6.0</title>
+<title>ITF Athlete OS</title>
 
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
 <header>
-<h1>🥋 ITF AI COACH 6.0</h1>
-<p>Atleta inteligente + planificación automática</p>
+<h1>🥋 ITF ATHLETE OS</h1>
+<p>App profesional de rendimiento</p>
 </header>
 
-<!-- PANEL IA -->
+<!-- DASHBOARD -->
 <section class="card">
 
 <h2>🧠 Coach IA</h2>
 <p id="aiMessage">Analizando...</p>
 
-<h2>📊 Estado del atleta</h2>
-<p id="status">—</p>
+<h2>📊 Score</h2>
+<h1 id="score">0</h1>
 
 </section>
 
-<!-- CALENDARIO -->
+<!-- INPUT -->
 <section class="card">
 
-<h2>📅 Calendario semanal</h2>
+<h2>📅 Nueva sesión</h2>
 
-<div id="calendar"></div>
+<label>Formas ITF</label>
+<input type="number" id="forms">
+
+<label>Sparring</label>
+<input type="number" id="sparring">
+
+<label>Fuerza</label>
+<input type="number" id="strength">
+
+<label>Velocidad</label>
+<input type="number" id="speed">
+
+<label>Flexibilidad</label>
+<input type="number" id="flex">
+
+<label>Resistencia</label>
+<input type="number" id="endurance">
+
+<button onclick="saveSession()">Guardar sesión</button>
 
 </section>
 
-<!-- DETALLE DÍA -->
+<!-- HISTORIAL -->
 <section class="card">
 
-<h2>📌 Sesión del día</h2>
-
-<div id="dayDetail">Seleccioná un día</div>
-
-<button onclick="saveSession()">💾 Guardar sesión</button>
+<h2>📚 Historial</h2>
+<div id="history"></div>
 
 </section>
 
-<!-- RESUMEN -->
+<!-- GRAFICO -->
 <section class="card">
 
-<h2>📊 Resumen semanal</h2>
-
-<p id="weeklyReport"></p>
+<h2>📈 Progreso real</h2>
+<canvas id="chart"></canvas>
 
 </section>
 

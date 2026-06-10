@@ -1,249 +1,118 @@
-// ======================
-// CARGA INICIAL
-// ======================
+let data = {
+tkd:0,
+strength:0,
+speed:0,
+flex:0,
+swim:0,
+bike:0,
+intensity:5,
+fatigue:5
+};
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadData();
-    setTimeout(createChart, 200);
+function saveDay(){
+
+data.tkd = +document.getElementById("tkd").value;
+data.strength = +document.getElementById("strength").value;
+data.speed = +document.getElementById("speed").value;
+data.flex = +document.getElementById("flex").value;
+data.swim = +document.getElementById("swim").value;
+data.bike = +document.getElementById("bike").value;
+data.intensity = +document.getElementById("intensity").value;
+data.fatigue = +document.getElementById("fatigue").value;
+
+localStorage.setItem("tkdData", JSON.stringify(data));
+
+update();
+addPoints();
+checkAchievements();
+}
+
+function update(){
+
+let total =
+data.tkd +
+data.strength +
+data.speed +
+data.flex +
+data.swim +
+data.bike;
+
+let percent = Math.min(100, total/6);
+
+document.getElementById("progress").style.width = percent + "%";
+document.getElementById("progressText").innerText = Math.round(percent) + "%";
+}
+
+function addPoints(){
+
+let points =
+data.tkd +
+data.strength +
+data.speed +
+data.flex;
+
+document.getElementById("points").innerText = points;
+}
+
+function load(){
+
+let saved = JSON.parse(localStorage.getItem("tkdData"));
+
+if(saved){
+
+data = saved;
+
+document.getElementById("tkd").value = data.tkd;
+document.getElementById("strength").value = data.strength;
+document.getElementById("speed").value = data.speed;
+document.getElementById("flex").value = data.flex;
+document.getElementById("swim").value = data.swim;
+document.getElementById("bike").value = data.bike;
+document.getElementById("intensity").value = data.intensity;
+document.getElementById("fatigue").value = data.fatigue;
+
+update();
+addPoints();
+}
+}
+
+function checkAchievements(){
+
+let list = document.getElementById("achievements");
+
+if(data.tkd > 80){
+list.innerHTML += "<li>🥋 Entreno fuerte de TKD</li>";
+}
+
+if(data.flex > 40){
+list.innerHTML += "<li>🤸 Flexibilidad en progreso</li>";
+}
+
+if(data.speed > 30){
+list.innerHTML += "<li>⚡ Velocidad mejorando</li>";
+}
+}
+
+function chart(){
+
+new Chart(document.getElementById("chart"),{
+
+type:"radar",
+
+data:{
+labels:["TKD","Fuerza","Velocidad","Flex","Natación","Bici"],
+datasets:[{
+data:[data.tkd,data.strength,data.speed,data.flex,data.swim,data.bike],
+backgroundColor:"rgba(0,255,136,0.3)",
+borderColor:"#00ff88"
+}]
+}
+
 });
 
-// ======================
-// ACTUALIZAR PROGRESO
-// ======================
-
-function updateProgress() {
-
-    const activities = document.querySelectorAll(".activity");
-
-    let total = activities.length;
-    let completed = 0;
-
-    activities.forEach(item => {
-        if(item.value === "Completado"){
-            completed++;
-        }
-    });
-
-    let percentage = Math.round((completed / total) * 100);
-
-    document.getElementById("progressBar").style.width =
-        percentage + "%";
-
-    document.getElementById("progressText").innerText =
-        percentage + "%";
-
-    let points = completed * 5;
-
-    document.getElementById("points").innerText = points;
-
-    saveProgress(percentage, points);
-
-    unlockAchievements(completed);
 }
 
-// ======================
-// GUARDAR PROGRESO
-// ======================
-
-function saveProgress(progress, points){
-
-    localStorage.setItem("progress", progress);
-    localStorage.setItem("points", points);
-
-    const activities = [];
-
-    document.querySelectorAll(".activity")
-        .forEach(item=>{
-            activities.push(item.value);
-        });
-
-    localStorage.setItem(
-        "activities",
-        JSON.stringify(activities)
-    );
-}
-
-// ======================
-// DIARIO
-// ======================
-
-function saveJournal(){
-
-    localStorage.setItem(
-        "sleep",
-        document.getElementById("sleep").value
-    );
-
-    localStorage.setItem(
-        "weight",
-        document.getElementById("weight").value
-    );
-
-    localStorage.setItem(
-        "motivation",
-        document.getElementById("motivation").value
-    );
-
-    localStorage.setItem(
-        "fatigue",
-        document.getElementById("fatigue").value
-    );
-
-    localStorage.setItem(
-        "notes",
-        document.getElementById("notes").value
-    );
-
-    alert("Diario guardado ✔");
-}
-
-// ======================
-// CARGAR DATOS
-// ======================
-
-function loadData(){
-
-    const progress =
-        localStorage.getItem("progress");
-
-    const points =
-        localStorage.getItem("points");
-
-    if(progress){
-
-        document.getElementById("progressBar")
-            .style.width = progress + "%";
-
-        document.getElementById("progressText")
-            .innerText = progress + "%";
-    }
-
-    if(points){
-        document.getElementById("points")
-            .innerText = points;
-    }
-
-    const savedActivities =
-        JSON.parse(
-            localStorage.getItem("activities")
-        );
-
-    if(savedActivities){
-
-        const selects =
-            document.querySelectorAll(".activity");
-
-        selects.forEach((select,index)=>{
-            select.value =
-                savedActivities[index];
-        });
-    }
-
-    document.getElementById("sleep").value =
-        localStorage.getItem("sleep") || "";
-
-    document.getElementById("weight").value =
-        localStorage.getItem("weight") || "";
-
-    document.getElementById("motivation").value =
-        localStorage.getItem("motivation") || "";
-
-    document.getElementById("fatigue").value =
-        localStorage.getItem("fatigue") || "";
-
-    document.getElementById("notes").value =
-        localStorage.getItem("notes") || "";
-}
-
-// ======================
-// LOGROS
-// ======================
-
-function unlockAchievements(completed){
-
-    const list =
-        document.getElementById("achievementList");
-
-    if(completed >= 1){
-
-        if(
-            !document.getElementById("firstAchievement")
-        ){
-
-            const li =
-                document.createElement("li");
-
-            li.id =
-                "firstAchievement";
-
-            li.innerText =
-                "🏅 Primera actividad completada";
-
-            list.appendChild(li);
-        }
-    }
-
-    if(completed >= 5){
-
-        if(
-            !document.getElementById("weekAchievement")
-        ){
-
-            const li =
-                document.createElement("li");
-
-            li.id =
-                "weekAchievement";
-
-            li.innerText =
-                "🔥 Semana casi perfecta";
-
-            list.appendChild(li);
-        }
-    }
-}
-
-// ======================
-// GRAFICO
-// ======================
-
-function createChart(){
-
-    const canvas = document.getElementById("skillsChart");
-
-    if(!canvas) return;
-
-    new Chart(canvas,{
-
-        type:"radar",
-
-        data:{
-
-            labels:[
-                "Fuerza",
-                "Velocidad",
-                "Flexibilidad",
-                "Técnica",
-                "Resistencia"
-            ],
-
-            datasets:[{
-                label:"Nivel",
-                data:[60,50,70,75,65],
-                backgroundColor:"rgba(76,175,80,.3)",
-                borderColor:"#4CAF50",
-                borderWidth:2
-            }]
-        },
-
-        options:{
-            responsive:true,
-            scales:{
-                r:{
-                    beginAtZero:true,
-                    max:100
-                }
-            }
-        }
-    });
-}
+window.onload = function(){
+load();
+chart();
+};

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ITF Athlete OS 8.0</title>
+<title>Tornado IA Metod v11</title>
 
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,42 +13,38 @@
 <body>
 
 <header>
-<h1>🥋 ITF ATHLETE OS 8.0</h1>
-
-<nav>
-<button onclick="show('dashboard')">Dashboard</button>
-<button onclick="show('calendar')">Calendario</button>
-<button onclick="show('session')">Entreno</button>
-<button onclick="show('history')">Historial</button>
-</nav>
-
+<h1>🌪️ TORNADO IA METOD v11</h1>
+<p>Entrenamiento humano + inteligencia adaptativa</p>
 </header>
 
-<!-- DASHBOARD -->
-<section id="dashboard" class="page active">
+<!-- IA PANEL -->
+<section class="card">
 
-<h2>🧠 IA Coach</h2>
-<p id="ai"></p>
-
-<h2>📊 Estado del atleta</h2>
-<p id="status"></p>
-
-<canvas id="chart"></canvas>
+<h2>🧠 Tu estado hoy</h2>
+<p id="humanAI"></p>
 
 </section>
 
-<!-- CALENDARIO -->
-<section id="calendar" class="page">
+<!-- SENSACIONES -->
+<section class="card">
 
-<h2>📅 Calendario</h2>
-<div id="cal"></div>
+<h2>📊 Cómo te sentiste hoy</h2>
+
+<label>Energía (0-10)</label>
+<input id="energy" type="range" min="0" max="10">
+
+<label>Motivación (0-10)</label>
+<input id="motivation" type="range" min="0" max="10">
+
+<label>Fatiga (0-10)</label>
+<input id="fatigue" type="range" min="0" max="10">
 
 </section>
 
-<!-- SESIÓN -->
-<section id="session" class="page">
+<!-- ENTRENAMIENTO -->
+<section class="card">
 
-<h2>🥋 Sesión de entrenamiento</h2>
+<h2>🥋 Entreno real</h2>
 
 <label>Formas ITF</label>
 <input id="forms" type="number">
@@ -68,18 +64,25 @@
 <label>Resistencia</label>
 <input id="endurance" type="number">
 
-<h3>📝 Observaciones</h3>
-<textarea id="notes" placeholder="Cómo te sentiste, errores, feedback..."></textarea>
+<textarea id="notes" placeholder="Cómo fue tu entrenamiento real..."></textarea>
 
-<button onclick="save()">💾 Guardar sesión</button>
+<button onclick="save()">Guardar día</button>
 
 </section>
 
 <!-- HISTORIAL -->
-<section id="history" class="page">
+<section class="card">
 
-<h2>📚 Historial completo</h2>
-<div id="list"></div>
+<h2>📚 Evolución real</h2>
+<div id="history"></div>
+
+</section>
+
+<!-- GRAFICO -->
+<section class="card">
+
+<h2>📈 Tendencia humana</h2>
+<canvas id="chart"></canvas>
 
 </section>
 

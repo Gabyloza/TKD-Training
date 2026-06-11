@@ -1,90 +1,317 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tornado IA Metod v11</title>
+<title>TKD Performance Tracker</title>
 
 <link rel="stylesheet" href="style.css">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
 
-<header>
-<h1>🌪️ TORNADO IA METOD v11</h1>
-<p>Entrenamiento humano + inteligencia adaptativa</p>
-</header>
+<!-- APP -->
 
-<!-- IA PANEL -->
-<section class="card">
+<div class="app">
 
-<h2>🧠 Tu estado hoy</h2>
-<p id="humanAI"></p>
+    <!-- HEADER -->
 
-</section>
+    <header class="topbar">
 
-<!-- SENSACIONES -->
-<section class="card">
+        <div>
 
-<h2>📊 Cómo te sentiste hoy</h2>
+            <h1>🥋 TKD Performance</h1>
 
-<label>Energía (0-10)</label>
-<input id="energy" type="range" min="0" max="10">
+            <p>Preparación Cinturón Negro</p>
 
-<label>Motivación (0-10)</label>
-<input id="motivation" type="range" min="0" max="10">
+        </div>
 
-<label>Fatiga (0-10)</label>
-<input id="fatigue" type="range" min="0" max="10">
+    </header>
 
-</section>
+    <!-- DASHBOARD -->
 
-<!-- ENTRENAMIENTO -->
-<section class="card">
+    <section id="dashboard" class="screen active">
 
-<h2>🥋 Entreno real</h2>
+        <h2>Resumen General</h2>
 
-<label>Formas ITF</label>
-<input id="forms" type="number">
+        <div class="cards">
 
-<label>Sparring</label>
-<input id="sparring" type="number">
+            <div class="stat-card">
 
-<label>Fuerza</label>
-<input id="strength" type="number">
+                <span>⏱️ Horas Totales</span>
 
-<label>Velocidad</label>
-<input id="speed" type="number">
+                <h3 id="totalHours">0 h</h3>
 
-<label>Flexibilidad</label>
-<input id="flex" type="number">
+            </div>
 
-<label>Resistencia</label>
-<input id="endurance" type="number">
+            <div class="stat-card">
 
-<textarea id="notes" placeholder="Cómo fue tu entrenamiento real..."></textarea>
+                <span>🏊 Metros Nadados</span>
 
-<button onclick="save()">Guardar día</button>
+                <h3 id="totalSwim">0 m</h3>
 
-</section>
+            </div>
 
-<!-- HISTORIAL -->
-<section class="card">
+            <div class="stat-card">
 
-<h2>📚 Evolución real</h2>
-<div id="history"></div>
+                <span>🚴 Kilómetros</span>
 
-</section>
+                <h3 id="totalBike">0 km</h3>
 
-<!-- GRAFICO -->
-<section class="card">
+            </div>
 
-<h2>📈 Tendencia humana</h2>
-<canvas id="chart"></canvas>
+            <div class="stat-card">
 
-</section>
+                <span>🔥 Cumplimiento</span>
+
+                <h3 id="compliance">0%</h3>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h3>🧠 Estado General</h3>
+
+            <p id="humanAI"></p>
+        </div>
+
+        <div class="card">
+
+            <h3>📈 Carga General</h3>
+
+            <canvas id="mainChart"></canvas>
+
+        </div>
+
+    </section>
+
+    <!-- REGISTRO -->
+
+    <section id="training" class="screen">
+
+        <h2>Registrar Entrenamiento</h2>
+
+        <!-- ESTADO -->
+
+        <div class="card">
+
+            <h3>Estado del día</h3>
+
+            <label>Sueño (horas)</label>
+            <input type="number" id="sleep">
+
+            <label>Peso</label>
+            <input type="number" id="weight">
+
+            <label>Energía (%)</label>
+            <input type="range" id="energy" min="0" max="100">
+
+            <label>Motivación (%)</label>
+            <input type="range" id="motivation" min="0" max="100">
+
+            <label>Fatiga (%)</label>
+            <input type="range" id="fatigue" min="0" max="100">
+
+        </div>
+
+        <!-- TKD -->
+
+        <div class="card">
+
+            <h3>🥋 Taekwondo</h3>
+
+            <label>Minutos</label>
+            <input type="number" id="tkdMinutes">
+
+            <label>Tul practicados</label>
+            <input type="number" id="forms">
+
+            <label>Rounds combate</label>
+            <input type="number" id="sparringRounds">
+
+            <label>Patadas realizadas</label>
+            <input type="number" id="kicks">
+
+        </div>
+
+        <!-- NATACION -->
+
+        <div class="card">
+
+            <h3>🏊 Natación</h3>
+
+            <label>Metros</label>
+            <input type="number" id="swimMeters">
+
+            <label>Tiempo (min)</label>
+            <input type="number" id="swimMinutes">
+
+            <label>Ejercicios</label>
+            <textarea id="swimExercises"></textarea>
+
+        </div>
+
+        <!-- BICICLETA -->
+
+        <div class="card">
+
+            <h3>🚴 Bicicleta</h3>
+
+            <label>Km</label>
+            <input type="number" id="bikeKm">
+
+            <label>Tiempo (min)</label>
+            <input type="number" id="bikeMinutes">
+
+        </div>
+
+        <!-- FUERZA -->
+
+        <div class="card">
+
+            <h3>💪 Fuerza</h3>
+
+            <label>Tiempo (min)</label>
+            <input type="number" id="strengthMinutes">
+
+        </div>
+
+        <!-- VELOCIDAD -->
+
+        <div class="card">
+
+            <h3>⚡ Velocidad</h3>
+
+            <label>Tiempo (min)</label>
+            <input type="number" id="speedMinutes">
+
+        </div>
+
+        <!-- FLEXIBILIDAD -->
+
+        <div class="card">
+
+            <h3>🤸 Flexibilidad</h3>
+
+            <label>Tiempo (min)</label>
+            <input type="number" id="flexMinutes">
+
+        </div>
+
+        <!-- HANDBALL -->
+
+        <div class="card">
+
+            <h3>🤾 Handball</h3>
+
+            <label>Tiempo (min)</label>
+            <input type="number" id="handballMinutes">
+
+        </div>
+
+        <div class="card">
+
+            <label>Observaciones</label>
+
+            <textarea id="notes"></textarea>
+
+            <button onclick="save()">
+                Guardar Entrenamiento
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- ESTADISTICAS -->
+
+    <section id="stats" class="screen">
+
+        <h2>📊 Estadísticas</h2>
+
+        <div class="card">
+
+            <canvas id="sportsChart"></canvas>
+
+        </div>
+
+        <div class="card">
+
+            <canvas id="sleepChart"></canvas>
+
+        </div>
+
+    </section>
+
+    <!-- HISTORIAL -->
+
+    <section id="historyScreen" class="screen">
+
+        <h2>📚 Historial</h2>
+
+        <div id="history"></div>
+
+    </section>
+
+    <!-- PERFIL -->
+
+    <section id="profile" class="screen">
+
+        <h2>⚙️ Objetivos</h2>
+
+        <div class="card">
+
+            <label>Objetivo principal</label>
+
+            <input
+                type="text"
+                value="Cinturón Negro Diciembre">
+
+            <label>Meta flexibilidad</label>
+
+            <input
+                type="text"
+                value="Apertura completa">
+
+        </div>
+
+    </section>
+
+</div>
+
+<!-- MENU -->
+
+<nav class="bottom-nav">
+
+<button onclick="openScreen('dashboard')">
+🏠
+</button>
+
+<button onclick="openScreen('training')">
+➕
+</button>
+
+<button onclick="openScreen('stats')">
+📊
+</button>
+
+<button onclick="openScreen('historyScreen')">
+📚
+</button>
+
+<button onclick="openScreen('profile')">
+⚙️
+</button>
+
+</nav>
 
 <script src="app.js"></script>
 

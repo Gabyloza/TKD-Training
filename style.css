@@ -1,168 +1,346 @@
-/* ==========================
+/* ===================================
    RESET
-========================== */
+=================================== */
 
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Inter, Arial, sans-serif;
+}
+
+:root{
+
+--bg:#0f172a;
+--bg2:#111827;
+--card:#1e293b;
+
+--green:#22c55e;
+--blue:#3b82f6;
+--orange:#f59e0b;
+--red:#ef4444;
+
+--text:#f8fafc;
+--muted:#94a3b8;
+
+--radius:18px;
+
 }
 
 body{
-background:#0f172a;
-color:#f8fafc;
+
+font-family:'Inter',sans-serif;
+
+background:var(--bg);
+
+color:var(--text);
+
 padding-bottom:90px;
+
 }
 
-/* ==========================
-   TOP BAR
-========================== */
+/* ===================================
+   APP
+=================================== */
+
+.app{
+
+max-width:1200px;
+
+margin:auto;
+
+}
+
+/* ===================================
+   TOPBAR
+=================================== */
 
 .topbar{
-padding:20px;
-background:#111827;
-border-bottom:1px solid #1e293b;
+
 position:sticky;
+
 top:0;
+
 z-index:100;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:20px;
+
+background:rgba(15,23,42,.95);
+
+backdrop-filter:blur(10px);
+
+border-bottom:1px solid #233047;
+
 }
 
-.topbar h1{
+.header-info h1{
+
 font-size:1.4rem;
+
 font-weight:700;
+
 }
 
-.topbar p{
-color:#94a3b8;
-margin-top:5px;
+.header-info p{
+
+margin-top:4px;
+
+font-size:.85rem;
+
+color:var(--muted);
+
 }
 
-/* ==========================
+.header-badge{
+
+width:70px;
+
+height:70px;
+
+border-radius:50%;
+
+background:var(--green);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+font-weight:bold;
+
+color:white;
+
+}
+
+.header-badge span{
+
+font-size:1.3rem;
+
+}
+
+/* ===================================
    SCREENS
-========================== */
+=================================== */
 
 .screen{
+
 display:none;
-padding:18px;
+
+padding:20px;
+
 animation:fade .25s ease;
+
 }
 
 .screen.active{
+
 display:block;
+
 }
 
 @keyframes fade{
+
 from{
 opacity:0;
 transform:translateY(10px);
 }
+
 to{
 opacity:1;
 transform:translateY(0);
 }
+
 }
 
-/* ==========================
+/* ===================================
    TITULOS
-========================== */
+=================================== */
 
 h2{
+
 margin-bottom:15px;
-font-size:1.3rem;
+
+font-size:1.4rem;
+
 }
 
 h3{
-margin-bottom:10px;
+
+margin-bottom:12px;
+
+font-size:1rem;
+
 }
 
-/* ==========================
-   GRID DASHBOARD
-========================== */
+/* ===================================
+   DASHBOARD CARDS
+=================================== */
 
 .cards{
+
 display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-margin-bottom:15px;
+
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:15px;
+
+margin-bottom:20px;
+
 }
 
 .stat-card{
-background:#1e293b;
-border-radius:18px;
-padding:16px;
-box-shadow:0 3px 15px rgba(0,0,0,.25);
+
+background:linear-gradient(
+135deg,
+#1e293b,
+#273549
+);
+
+padding:18px;
+
+border-radius:var(--radius);
+
+box-shadow:
+0 10px 25px rgba(0,0,0,.25);
+
+transition:.2s;
+
+}
+
+.stat-card:hover{
+
+transform:translateY(-3px);
+
 }
 
 .stat-card span{
+
 font-size:.8rem;
-color:#94a3b8;
+
+color:var(--muted);
+
 display:block;
+
 margin-bottom:8px;
+
 }
 
 .stat-card h3{
-font-size:1.4rem;
-font-weight:700;
-color:#22c55e;
+
+font-size:1.6rem;
+
+color:var(--green);
+
 }
 
-/* ==========================
+/* ===================================
    CARDS
-========================== */
+=================================== */
 
 .card{
-background:#1e293b;
-border-radius:20px;
-padding:18px;
-margin-bottom:15px;
-box-shadow:0 3px 15px rgba(0,0,0,.25);
+
+background:var(--card);
+
+padding:20px;
+
+border-radius:var(--radius);
+
+margin-bottom:18px;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,.20);
+
 }
 
 .card p{
-line-height:1.5;
+
+line-height:1.6;
+
 }
 
-/* ==========================
-   FORMULARIOS
-========================== */
+/* ===================================
+   LABELS
+=================================== */
 
 label{
+
 display:block;
-margin-top:12px;
+
+margin-top:14px;
+
 margin-bottom:6px;
+
 font-size:.9rem;
+
 color:#cbd5e1;
+
 }
+/* ===================================
+   INPUTS
+=================================== */
 
 input,
-textarea,
-select{
+select,
+textarea{
 
 width:100%;
-padding:12px;
-border:none;
-border-radius:12px;
 
-background:#0f172a;
+padding:12px 14px;
+
+border:none;
+
+border-radius:14px;
+
+background:#0b1220;
 
 color:white;
 
 outline:none;
+
+transition:.2s;
+
+font-size:.95rem;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+
+box-shadow:0 0 0 2px var(--green);
+
 }
 
 textarea{
+
 resize:vertical;
-min-height:80px;
+
+min-height:90px;
+
 }
 
-input[type=range]{
+input[type="range"]{
+
 padding:0;
+
+height:8px;
+
+cursor:pointer;
+
 }
 
-/* ==========================
+/* ===================================
    BOTONES
-========================== */
+=================================== */
 
 button{
 
@@ -170,7 +348,9 @@ border:none;
 
 cursor:pointer;
 
-transition:.2s;
+transition:.25s;
+
+font-family:inherit;
 
 }
 
@@ -182,11 +362,13 @@ padding:14px;
 
 border-radius:14px;
 
-font-weight:bold;
-
-background:#22c55e;
+background:var(--green);
 
 color:white;
+
+font-weight:600;
+
+font-size:.95rem;
 
 margin-top:15px;
 
@@ -196,47 +378,13 @@ margin-top:15px;
 
 transform:translateY(-2px);
 
-}
-
-/* ==========================
-   HISTORIAL
-========================== */
-
-.history-card{
-
-background:#111827;
-
-border-left:5px solid #22c55e;
-
-padding:15px;
-
-margin-bottom:12px;
-
-border-radius:14px;
+filter:brightness(1.05);
 
 }
 
-.history-date{
-
-font-weight:bold;
-
-margin-bottom:10px;
-
-color:#22c55e;
-
-}
-
-.history-row{
-
-margin:4px 0;
-
-font-size:.95rem;
-
-}
-
-/* ==========================
-   GRAFICOS
-========================== */
+/* ===================================
+   CHARTS
+=================================== */
 
 canvas{
 
@@ -246,9 +394,485 @@ max-height:320px;
 
 }
 
-/* ==========================
-   BOTTOM NAV
-========================== */
+/* ===================================
+   RESUMENES
+=================================== */
+
+.summary-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:12px;
+
+margin-top:10px;
+
+}
+
+.summary-item{
+
+background:#0b1220;
+
+padding:15px;
+
+border-radius:14px;
+
+}
+
+.summary-item span{
+
+display:block;
+
+font-size:.8rem;
+
+color:var(--muted);
+
+margin-bottom:6px;
+
+}
+
+.summary-item strong{
+
+font-size:1.2rem;
+
+}
+
+/* ===================================
+   COMPARACIONES
+=================================== */
+
+.compare-box{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:12px;
+
+margin-bottom:10px;
+
+background:#0b1220;
+
+border-radius:12px;
+
+}
+
+.compare-value{
+
+font-weight:700;
+
+font-size:1rem;
+
+}
+
+.compare-up{
+
+color:var(--green);
+
+}
+
+.compare-down{
+
+color:var(--red);
+
+}
+
+/* ===================================
+   IA / ENTRENADOR
+=================================== */
+
+.coach-box{
+
+padding:15px;
+
+border-radius:14px;
+
+background:#0b1220;
+
+margin-bottom:12px;
+
+}
+
+.coach-good{
+
+border-left:5px solid var(--green);
+
+}
+
+.coach-warning{
+
+border-left:5px solid var(--orange);
+
+}
+
+.coach-danger{
+
+border-left:5px solid var(--red);
+
+}
+
+/* ===================================
+   OBJETIVOS
+=================================== */
+
+.goal-card{
+
+padding:14px;
+
+background:#0b1220;
+
+border-radius:14px;
+
+margin-bottom:12px;
+
+}
+
+.goal-title{
+
+font-size:.85rem;
+
+color:var(--muted);
+
+margin-bottom:8px;
+
+}
+
+.progress-bar{
+
+height:10px;
+
+background:#1f2937;
+
+border-radius:999px;
+
+overflow:hidden;
+
+margin-top:8px;
+
+}
+
+.progress-fill{
+
+height:100%;
+
+background:var(--green);
+
+width:0%;
+
+transition:.4s;
+
+}
+
+/* ===================================
+   CALENDARIO
+=================================== */
+
+.calendar-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(7,1fr);
+
+gap:8px;
+
+margin-top:10px;
+
+}
+
+.calendar-day{
+
+aspect-ratio:1;
+
+border-radius:10px;
+
+background:#1f2937;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:.8rem;
+
+font-weight:600;
+
+}
+
+.calendar-none{
+
+background:#1f2937;
+
+}
+
+.calendar-low{
+
+background:#14532d;
+
+}
+
+.calendar-medium{
+
+background:#16a34a;
+
+}
+
+.calendar-high{
+
+background:#22c55e;
+
+color:white;
+
+}
+
+/* ===================================
+   HISTORIAL
+=================================== */
+
+.history-card{
+
+background:#0b1220;
+
+padding:15px;
+
+border-radius:14px;
+
+margin-bottom:12px;
+
+border-left:5px solid var(--green);
+
+}
+
+.history-date{
+
+font-weight:700;
+
+margin-bottom:8px;
+
+color:var(--green);
+
+}
+
+.history-row{
+
+margin:5px 0;
+
+font-size:.92rem;
+
+}
+
+/* ===================================
+   BADGES
+=================================== */
+
+.badge{
+
+display:inline-flex;
+
+align-items:center;
+
+padding:5px 10px;
+
+border-radius:999px;
+
+font-size:.8rem;
+
+font-weight:600;
+
+}
+
+.badge-green{
+
+background:rgba(34,197,94,.15);
+
+color:var(--green);
+
+}
+
+.badge-blue{
+
+background:rgba(59,130,246,.15);
+
+color:var(--blue);
+
+}
+
+.badge-orange{
+
+background:rgba(245,158,11,.15);
+
+color:var(--orange);
+
+}
+
+.badge-red{
+
+background:rgba(239,68,68,.15);
+
+color:var(--red);
+
+}
+/* ===================================
+   KPI CARDS
+=================================== */
+
+.kpi-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
+
+gap:15px;
+
+margin-top:15px;
+
+}
+
+.kpi-card{
+
+background:linear-gradient(
+135deg,
+#0b1220,
+#172234
+);
+
+padding:18px;
+
+border-radius:18px;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,.25);
+
+}
+
+.kpi-title{
+
+font-size:.85rem;
+
+color:var(--muted);
+
+margin-bottom:10px;
+
+}
+
+.kpi-value{
+
+font-size:2rem;
+
+font-weight:700;
+
+color:white;
+
+}
+
+.kpi-sub{
+
+margin-top:6px;
+
+font-size:.85rem;
+
+color:var(--muted);
+
+}
+
+/* ===================================
+   ESTADOS
+=================================== */
+
+.status-good{
+
+color:var(--green);
+
+font-weight:700;
+
+}
+
+.status-warning{
+
+color:var(--orange);
+
+font-weight:700;
+
+}
+
+.status-danger{
+
+color:var(--red);
+
+font-weight:700;
+
+}
+
+/* ===================================
+   TARJETAS INTERACTIVAS
+=================================== */
+
+.card,
+.stat-card,
+.kpi-card{
+
+transition:
+transform .25s,
+box-shadow .25s;
+
+}
+
+.card:hover,
+.kpi-card:hover,
+.stat-card:hover{
+
+transform:translateY(-2px);
+
+box-shadow:
+0 12px 25px rgba(0,0,0,.30);
+
+}
+
+/* ===================================
+   TABLAS FUTURAS
+=================================== */
+
+.table-container{
+
+overflow-x:auto;
+
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+th{
+
+text-align:left;
+
+padding:12px;
+
+background:#0b1220;
+
+}
+
+td{
+
+padding:12px;
+
+border-top:1px solid #233047;
+
+}
+
+/* ===================================
+   MENU INFERIOR
+=================================== */
 
 .bottom-nav{
 
@@ -260,9 +884,13 @@ left:0;
 
 right:0;
 
-height:72px;
+height:75px;
 
-background:#111827;
+background:rgba(15,23,42,.98);
+
+backdrop-filter:blur(12px);
+
+border-top:1px solid #233047;
 
 display:flex;
 
@@ -270,23 +898,23 @@ justify-content:space-around;
 
 align-items:center;
 
-border-top:1px solid #1e293b;
-
 z-index:1000;
 
 }
 
 .bottom-nav button{
 
+flex:1;
+
+height:100%;
+
 background:none;
 
 color:white;
 
-font-size:1.4rem;
+font-size:1.25rem;
 
-width:100%;
-
-height:100%;
+transition:.2s;
 
 }
 
@@ -296,93 +924,87 @@ background:#1e293b;
 
 }
 
-/* ==========================
-   DASHBOARD EXTRA
-========================== */
+.bottom-nav button.active{
 
-.progress-box{
-
-margin-top:10px;
+color:var(--green);
 
 }
 
-.progress-bar{
+/* ===================================
+   ANIMACIONES
+=================================== */
 
-height:12px;
+.fade-in{
 
-background:#0f172a;
-
-border-radius:50px;
-
-overflow:hidden;
+animation:fadeIn .35s ease;
 
 }
 
-.progress-fill{
+@keyframes fadeIn{
 
-height:100%;
+from{
 
-width:60%;
+opacity:0;
 
-background:#22c55e;
-
-}
-
-/* ==========================
-   STATUS
-========================== */
-
-.status-good{
-
-color:#22c55e;
-
-font-weight:bold;
+transform:translateY(10px);
 
 }
 
-.status-warning{
+to{
 
-color:#f59e0b;
+opacity:1;
 
-font-weight:bold;
-
-}
-
-.status-danger{
-
-color:#ef4444;
-
-font-weight:bold;
+transform:translateY(0);
 
 }
 
-/* ==========================
-   MOBILE
-========================== */
+}
 
-@media(max-width:700px){
+.pulse{
+
+animation:pulse 1.5s infinite;
+
+}
+
+@keyframes pulse{
+
+0%{
+transform:scale(1);
+}
+
+50%{
+transform:scale(1.03);
+}
+
+100%{
+transform:scale(1);
+}
+
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:900px){
 
 .cards{
 
-grid-template-columns:1fr 1fr;
+grid-template-columns:
+repeat(2,1fr);
 
 }
 
-.topbar h1{
+.kpi-grid{
 
-font-size:1.2rem;
-
-}
-
-.stat-card h3{
-
-font-size:1.2rem;
+grid-template-columns:
+repeat(2,1fr);
 
 }
 
 }
 
-@media(max-width:500px){
+@media(max-width:600px){
 
 .cards{
 
@@ -390,43 +1012,118 @@ grid-template-columns:1fr;
 
 }
 
+.kpi-grid{
+
+grid-template-columns:1fr;
+
 }
 
-/* ==========================
+.topbar{
+
+padding:15px;
+
+}
+
+.header-info h1{
+
+font-size:1.15rem;
+
+}
+
+.header-badge{
+
+width:60px;
+
+height:60px;
+
+}
+
+.screen{
+
+padding:15px;
+
+}
+
+.card{
+
+padding:16px;
+
+}
+
+.bottom-nav button{
+
+font-size:1.1rem;
+
+}
+
+}
+
+/* ===================================
    SCROLLBAR
-========================== */
+=================================== */
 
 ::-webkit-scrollbar{
+
 width:8px;
+
 }
 
 ::-webkit-scrollbar-track{
+
 background:#111827;
+
 }
 
 ::-webkit-scrollbar-thumb{
+
 background:#334155;
+
 border-radius:20px;
-}
-
-/* ==========================
-   FUTURAS TARJETAS
-========================== */
-
-.metric-large{
-
-font-size:2rem;
-
-font-weight:700;
-
-color:#22c55e;
 
 }
 
-.metric-label{
+::-webkit-scrollbar-thumb:hover{
 
-color:#94a3b8;
+background:#475569;
 
-font-size:.85rem;
+}
+
+/* ===================================
+   UTILIDADES
+=================================== */
+
+.text-center{
+
+text-align:center;
+
+}
+
+.mt-10{
+
+margin-top:10px;
+
+}
+
+.mt-20{
+
+margin-top:20px;
+
+}
+
+.mb-10{
+
+margin-bottom:10px;
+
+}
+
+.mb-20{
+
+margin-bottom:20px;
+
+}
+
+.hidden{
+
+display:none !important;
 
 }

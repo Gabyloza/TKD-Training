@@ -1,18 +1,65 @@
-// ============================
-// TKD PERFORMANCE TRACKER V12
-// ============================
+// ======================================
+// TKD PERFORMANCE TRACKER V13
+// ======================================
 
-let data = JSON.parse(
-localStorage.getItem("tkdPerformance")
+// ---------- STORAGE ----------
+
+let db = JSON.parse(
+localStorage.getItem("tkd_v13")
 ) || {
-sessions:[]
+
+sessions:[],
+
+goals:{
+weeklySessions:4,
+weeklyHours:5,
+
+monthlyHours:20,
+monthlyBike:100,
+monthlySwim:5000,
+
+mainGoal:"Cinturón Negro"
+}
+
 };
 
-// ============================
-// NAVEGACION
-// ============================
+// ---------- CHARTS ----------
 
-function openScreen(id){
+let loadChartInstance = null;
+let sportChartInstance = null;
+let sleepChartInstance = null;
+let hydrationChartInstance = null;
+
+// ---------- HELPERS ----------
+
+function $(id){
+return document.getElementById(id);
+}
+
+function todayISO(){
+
+return new Date()
+.toISOString()
+.split("T")[0];
+
+}
+
+// ---------- INIT ----------
+
+window.onload = ()=>{
+
+if($("sessionDate"))
+$("sessionDate").value = todayISO();
+
+updateAll();
+
+};
+
+// ======================================
+// NAVEGACION
+// ======================================
+
+function openScreen(screenId){
 
 document
 .querySelectorAll(".screen")
@@ -22,424 +69,928 @@ screen.classList.remove("active");
 
 });
 
-document
-.getElementById(id)
+$(screenId)
 .classList.add("active");
 
 }
 
-// ============================
-// SAVE
-// ============================
+// ======================================
+// GUARDAR OBJETIVOS
+// ======================================
 
-function save(){
+function saveGoals(){
+
+db.goals.weeklySessions =
++$("weeklyGoal").value || 0;
+
+db.goals.weeklyHours =
++$("weeklyHoursGoal").value || 0;
+
+db.goals.monthlyHours =
++$("monthlyHoursGoal").value || 0;
+
+db.goals.monthlyBike =
++$("monthlyBikeGoal").value || 0;
+
+db.goals.monthlySwim =
++$("monthlySwimGoal").value || 0;
+
+db.goals.mainGoal =
+$("mainGoal").value || "";
+
+saveDB();
+
+updateAll();
+
+alert("Objetivos guardados");
+
+}
+
+// ======================================
+// GUARDAR SESION
+// ======================================
+
+function saveSession(){
+
+let duration =
++$("duration").value || 0;
+
+let intensity =
++$("intensity").value || 1;
+
+let load =
+duration * intensity;
 
 let session = {
 
-date:new Date().toLocaleDateString(),
+id:Date.now(),
 
-sleep:+document.getElementById("sleep").value || 0,
+date:
+$("sessionDate").value,
 
-weight:+document.getElementById("weight").value || 0,
+sport:
+$("sport").value,
 
-energy:+document.getElementById("energy").value || 0,
+duration,
 
-motivation:+document.getElementById("motivation").value || 0,
+intensity,
 
-fatigue:+document.getElementById("fatigue").value || 0,
+load,
+
+hydration:
++$("hydration").value || 0,
+
+sleep:
++$("sleep").value || 0,
+
+energy:
++$("energy").value || 0,
+
+motivation:
++$("motivation").value || 0,
+
+fatigue:
++$("fatigue").value || 0,
+
+energyNote:
+$("energyNote").value,
+
+motivationNote:
+$("motivationNote").value,
+
+fatigueNote:
+$("fatigueNote").value,
+
+generalExercises:
+$("generalExercises").value,
+
+notes:
+$("notes").value,
 
 // TKD
 
-tkdMinutes:+document.getElementById("tkdMinutes").value || 0,
+forms:
+$("forms").value,
 
-forms:+document.getElementById("forms").value || 0,
+sparring:
++$("sparring").value || 0,
 
-sparringRounds:+document.getElementById("sparringRounds").value || 0,
-
-kicks:+document.getElementById("kicks").value || 0,
+tkdDetails:
+$("tkdDetails").value,
 
 // NATACION
 
-swimMeters:+document.getElementById("swimMeters").value || 0,
+swimMeters:
++$("swimMeters").value || 0,
 
-swimMinutes:+document.getElementById("swimMinutes").value || 0,
+swimStyle:
+$("swimStyle").value,
 
 swimExercises:
-document.getElementById("swimExercises").value || "",
+$("swimExercises").value,
 
 // BICICLETA
 
-bikeKm:+document.getElementById("bikeKm").value || 0,
+bikeKm:
++$("bikeKm").value || 0,
 
-bikeMinutes:+document.getElementById("bikeMinutes").value || 0,
+bikePace:
++$("bikePace").value || 0,
+
+bikeDetails:
+$("bikeDetails").value,
 
 // FUERZA
 
-strengthMinutes:
-+document.getElementById("strengthMinutes").value || 0,
+strengthExercises:
+$("strengthExercises").value,
+
+strengthNotes:
+$("strengthNotes").value,
 
 // VELOCIDAD
 
-speedMinutes:
-+document.getElementById("speedMinutes").value || 0,
+speedExercises:
+$("speedExercises").value,
 
-// FLEX
+// FLEXIBILIDAD
 
-flexMinutes:
-+document.getElementById("flexMinutes").value || 0,
+flexZones:
+$("flexZones").value,
+
+flexMethod:
+$("flexMethod").value,
 
 // HANDBALL
 
 handballMinutes:
-+document.getElementById("handballMinutes").value || 0,
++$("handballMinutes").value || 0,
 
-notes:
-document.getElementById("notes").value || ""
+handballExercises:
+$("handballExercises").value
 
 };
 
-data.sessions.push(session);
+db.sessions.push(session);
+
+saveDB();
+
+clearForm();
+
+updateAll();
+
+alert("Sesión guardada");
+
+}
+
+// ======================================
+// STORAGE
+// ======================================
+
+function saveDB(){
 
 localStorage.setItem(
-"tkdPerformance",
-JSON.stringify(data)
+"tkd_v13",
+JSON.stringify(db)
 );
 
-update();
+}
+// ======================================
+// LIMPIAR FORMULARIO
+// ======================================
 
-alert("Entrenamiento guardado ✅");
+function clearForm(){
+
+$("duration").value = "";
+$("hydration").value = "";
+$("sleep").value = "";
+
+$("energy").value = 5;
+$("motivation").value = 5;
+$("fatigue").value = 5;
+
+$("energyNote").value = "";
+$("motivationNote").value = "";
+$("fatigueNote").value = "";
+
+$("generalExercises").value = "";
+$("notes").value = "";
+
+$("forms").value = "";
+$("sparring").value = "";
+$("tkdDetails").value = "";
+
+$("swimMeters").value = "";
+$("swimStyle").value = "";
+$("swimExercises").value = "";
+
+$("bikeKm").value = "";
+$("bikePace").value = "";
+$("bikeDetails").value = "";
+
+$("strengthExercises").value = "";
+$("strengthNotes").value = "";
+
+$("speedExercises").value = "";
+
+$("flexZones").value = "";
+$("flexMethod").value = "";
+
+$("handballMinutes").value = "";
+$("handballExercises").value = "";
 
 }
 
-// ============================
-// IA HUMANA
-// ============================
+// ======================================
+// UPDATE GENERAL
+// ======================================
 
-function humanAI(){
+function updateAll(){
 
-if(data.sessions.length===0){
+updateDashboard();
 
-return "Todavía no hay suficientes datos.";
+updateCoach();
 
-}
+updateGoals();
 
-let s = data.sessions[data.sessions.length-1];
+updateStats();
 
-let totalTraining =
-
-s.tkdMinutes +
-s.swimMinutes +
-s.bikeMinutes +
-s.strengthMinutes +
-s.speedMinutes +
-s.flexMinutes +
-s.handballMinutes;
-
-if(s.sleep < 6){
-
-return "😴 Dormiste poco. Priorizá recuperación.";
+updateCalendar();
 
 }
 
-if(s.fatigue > 80){
+// ======================================
+// DASHBOARD
+// ======================================
 
-return "⚠️ Fatiga muy alta. Reducí carga.";
+function updateDashboard(){
 
-}
+let sessions = db.sessions;
 
-if(totalTraining > 240){
+// Horas
 
-return "🔥 Carga elevada. Recuperación recomendada.";
-
-}
-
-if(s.energy > 70 && s.fatigue < 40){
-
-return "🟢 Excelente estado para entrenar fuerte.";
-
-}
-
-return "🟡 Estado normal de entrenamiento.";
-
-}
-
-// ============================
-// METRICAS
-// ============================
-
-function totalHours(){
-
-let minutes = 0;
-
-data.sessions.forEach(s=>{
-
-minutes +=
-
-s.tkdMinutes +
-s.swimMinutes +
-s.bikeMinutes +
-s.strengthMinutes +
-s.speedMinutes +
-s.flexMinutes +
-s.handballMinutes;
-
-});
-
-return (minutes/60).toFixed(1);
-
-}
-
-function totalSwim(){
-
-return data.sessions.reduce(
-(total,s)=>total+s.swimMeters,
+let totalMinutes =
+sessions.reduce(
+(sum,s)=>sum+s.duration,
 0
 );
 
-}
+let totalHours =
+(totalMinutes/60).toFixed(1);
 
-function totalBike(){
+// Natación
 
-return data.sessions.reduce(
-(total,s)=>total+s.bikeKm,
+let swimTotal =
+sessions.reduce(
+(sum,s)=>sum+s.swimMeters,
 0
 );
 
+// Bicicleta
+
+let bikeTotal =
+sessions.reduce(
+(sum,s)=>sum+s.bikeKm,
+0
+);
+
+// Puntaje general
+
+let score = calculateScore();
+
+// Mostrar
+
+if($("totalHours"))
+$("totalHours").innerText =
+totalHours + " h";
+
+if($("totalSwim"))
+$("totalSwim").innerText =
+swimTotal + " m";
+
+if($("totalBike"))
+$("totalBike").innerText =
+bikeTotal + " km";
+
+if($("todayScore"))
+$("todayScore").innerText =
+score;
+
+// Racha
+
+let streakData =
+calculateStreak();
+
+if($("streak"))
+$("streak").innerText =
+streakData.current;
+
+drawLoadChart();
+
 }
 
-// ============================
-// CUMPLIMIENTO
-// ============================
+// ======================================
+// PUNTAJE GENERAL
+// ======================================
 
-function compliance(){
+function calculateScore(){
 
-if(data.sessions.length===0){
-
+if(db.sessions.length === 0)
 return 0;
 
+let recent =
+db.sessions.slice(-10);
+
+let avgEnergy =
+average(
+recent.map(s=>s.energy)
+);
+
+let avgMotivation =
+average(
+recent.map(s=>s.motivation)
+);
+
+let avgFatigue =
+average(
+recent.map(s=>s.fatigue)
+);
+
+let avgIntensity =
+average(
+recent.map(s=>s.intensity)
+);
+
+let avgHydration =
+average(
+recent.map(s=>s.hydration)
+);
+
+let score =
+
+(avgEnergy * 3) +
+(avgMotivation * 3) +
+(avgIntensity * 2) +
+(avgHydration)
+
+-
+
+(avgFatigue * 2);
+
+score =
+Math.max(
+0,
+Math.min(
+100,
+Math.round(score)
+)
+);
+
+return score;
+
 }
 
-let last7 = data.sessions.slice(-7);
+// ======================================
+// IA ENTRENADOR
+// ======================================
 
-let score = 0;
+function updateCoach(){
 
-last7.forEach(s=>{
+if(!$("humanAI"))
+return;
 
-let total =
+let msg =
+coachAnalysis();
 
-s.tkdMinutes +
-s.swimMinutes +
-s.bikeMinutes +
-s.strengthMinutes +
-s.speedMinutes +
-s.flexMinutes +
-s.handballMinutes;
+$("humanAI").innerText =
+msg;
 
-if(total >= 60){
-
-score++;
+if($("coachAI"))
+$("coachAI").innerText =
+msg;
 
 }
 
-});
+function coachAnalysis(){
 
-return Math.round(
-(score/7)*100
+if(db.sessions.length === 0){
+
+return "Todavía no hay suficientes sesiones registradas.";
+
+}
+
+let last =
+db.sessions[
+db.sessions.length - 1
+];
+
+let text = "";
+
+// Energía
+
+if(last.energy >= 8){
+
+text +=
+"Buen nivel de energía. ";
+
+}
+else if(last.energy <= 4){
+
+text +=
+"Tu energía está baja. ";
+
+}
+
+// Fatiga
+
+if(last.fatigue >= 8){
+
+text +=
+"Hay acumulación de fatiga. ";
+
+}
+
+// Intensidad
+
+if(last.intensity >= 8){
+
+text +=
+"Sesión intensa registrada. ";
+
+}
+
+// Hidratación
+
+if(last.hydration < 1.5){
+
+text +=
+"Deberías aumentar tu hidratación. ";
+
+}
+
+// Sueño
+
+if(last.sleep < 6){
+
+text +=
+"El descanso fue insuficiente. ";
+
+}
+
+if(text === ""){
+
+text =
+"Buen equilibrio entre carga y recuperación.";
+
+}
+
+return text;
+
+}
+
+// ======================================
+// RACHAS
+// ======================================
+
+function calculateStreak(){
+
+let dates =
+[
+...new Set(
+db.sessions.map(
+s=>s.date
+)
+)
+]
+.sort();
+
+if(dates.length === 0){
+
+return {
+current:0,
+best:0
+};
+
+}
+
+let best = 1;
+let current = 1;
+
+for(
+let i=1;
+i<dates.length;
+i++
+){
+
+let prev =
+new Date(dates[i-1]);
+
+let curr =
+new Date(dates[i]);
+
+let diff =
+(curr-prev)
+/(1000*60*60*24);
+
+if(diff === 1){
+
+current++;
+
+best =
+Math.max(
+best,
+current
 );
 
 }
+else{
 
-// ============================
-// HISTORIAL
-// ============================
+current = 1;
 
-function renderHistory(){
+}
 
-let div =
-document.getElementById("history");
+}
 
-div.innerHTML = "";
+return{
 
-data.sessions
-.slice()
-.reverse()
-.forEach(s=>{
+current,
+best
 
-div.innerHTML += `
+};
 
-<div class="history-card">
+}
 
-<div class="history-date">
+// ======================================
+// HELPERS
+// ======================================
 
-📅 ${s.date}
+function average(arr){
 
+if(arr.length===0)
+return 0;
+
+return arr.reduce(
+(a,b)=>a+b,
+0
+)/arr.length;
+
+}
+// ======================================
+// OBJETIVOS
+// ======================================
+
+function updateGoals(){
+
+if(!$("weeklyGoalsSummary"))
+return;
+
+let currentMonth =
+new Date().getMonth();
+
+let monthSessions =
+db.sessions.filter(s=>
+new Date(s.date).getMonth() === currentMonth
+);
+
+let totalHours =
+monthSessions.reduce(
+(sum,s)=>sum+s.duration,
+0
+)/60;
+
+let totalBike =
+monthSessions.reduce(
+(sum,s)=>sum+s.bikeKm,
+0
+);
+
+let totalSwim =
+monthSessions.reduce(
+(sum,s)=>sum+s.swimMeters,
+0
+);
+
+$("weeklyGoalsSummary").innerHTML =
+
+`
+<div class="goal-card">
+
+<div class="goal-title">
+Sesiones registradas
 </div>
 
-<div class="history-row">
-🥋 TKD: ${s.tkdMinutes} min
-</div>
-
-<div class="history-row">
-🏊 Natación: ${s.swimMeters} m
-</div>
-
-<div class="history-row">
-🚴 Bicicleta: ${s.bikeKm} km
-</div>
-
-<div class="history-row">
-💪 Fuerza: ${s.strengthMinutes} min
-</div>
-
-<div class="history-row">
-🤸 Flexibilidad: ${s.flexMinutes} min
-</div>
-
-<div class="history-row">
-😴 Sueño: ${s.sleep} h
-</div>
-
-<div class="history-row">
-📝 ${s.notes}
-</div>
+<strong>
+${db.sessions.length}
+/
+${db.goals.weeklySessions}
+</strong>
 
 </div>
-
 `;
 
-});
+$("monthlyGoalsSummary").innerHTML =
+
+`
+<div class="goal-card">
+
+<div class="goal-title">
+Horas del mes
+</div>
+
+<strong>
+${totalHours.toFixed(1)}
+/
+${db.goals.monthlyHours}
+h
+</strong>
+
+</div>
+
+<div class="goal-card">
+
+<div class="goal-title">
+Kilómetros bicicleta
+</div>
+
+<strong>
+${totalBike}
+/
+${db.goals.monthlyBike}
+km
+</strong>
+
+</div>
+
+<div class="goal-card">
+
+<div class="goal-title">
+Metros natación
+</div>
+
+<strong>
+${totalSwim}
+/
+${db.goals.monthlySwim}
+m
+</strong>
+
+</div>
+`;
 
 }
 
-// ============================
-// CHARTS
-// ============================
+// ======================================
+// ESTADISTICAS
+// ======================================
 
-let mainChart;
-let sportsChart;
-let sleepChart;
+function updateStats(){
 
-function drawCharts(){
+drawSportsChart();
 
-// MAIN
+drawSleepChart();
 
-let load = data.sessions.map(s=>
+drawHydrationChart();
 
-s.tkdMinutes +
-s.swimMinutes +
-s.bikeMinutes +
-s.strengthMinutes +
-s.speedMinutes +
-s.flexMinutes +
-s.handballMinutes
+updateComparisons();
 
+}
+
+// ======================================
+// COMPARACIONES
+// ======================================
+
+function updateComparisons(){
+
+if(!$("weeklyComparison"))
+return;
+
+let last7 =
+db.sessions.slice(-7);
+
+let prev7 =
+db.sessions.slice(-14,-7);
+
+let currentLoad =
+last7.reduce(
+(sum,s)=>sum+s.load,
+0
 );
 
-if(mainChart){
-
-mainChart.destroy();
-
-}
-
-mainChart = new Chart(
-
-document.getElementById("mainChart"),
-
-{
-
-type:"line",
-
-data:{
-
-labels:data.sessions.map(s=>s.date),
-
-datasets:[{
-
-label:"Carga",
-
-data:load
-
-}]
-
-}
-
-}
-
+let previousLoad =
+prev7.reduce(
+(sum,s)=>sum+s.load,
+0
 );
 
-// SPORTS
+let diff =
+currentLoad - previousLoad;
 
-let tkd = 0;
-let swim = 0;
-let bike = 0;
+$("weeklyComparison").innerHTML =
 
-data.sessions.forEach(s=>{
+`
+<div class="compare-box">
 
-tkd += s.tkdMinutes;
+<div>
+Carga semanal
+</div>
 
-swim += s.swimMinutes;
+<div class="
+compare-value
+${diff>=0 ? "compare-up":"compare-down"}
+">
 
-bike += s.bikeMinutes;
+${diff>=0 ? "+" : ""}
+${diff}
+
+</div>
+
+</div>
+`;
+
+let currentMonth =
+new Date().getMonth();
+
+let monthLoad =
+db.sessions
+.filter(
+s=>new Date(s.date).getMonth()===currentMonth
+)
+.reduce(
+(sum,s)=>sum+s.load,
+0
+);
+
+$("monthlyComparison").innerHTML =
+
+`
+<div class="compare-box">
+
+<div>
+Carga mensual
+</div>
+
+<div class="compare-value">
+
+${monthLoad}
+
+</div>
+
+</div>
+`;
+
+}
+
+// ======================================
+// CALENDARIO
+// ======================================
+
+function updateCalendar(){
+
+if(!$("calendarGrid"))
+return;
+
+let grid =
+$("calendarGrid");
+
+grid.innerHTML = "";
+
+for(let d=1; d<=31; d++){
+
+let cell =
+document.createElement("div");
+
+cell.classList.add(
+"calendar-day"
+);
+
+let count =
+db.sessions.filter(s=>{
+
+let day =
+new Date(s.date)
+.getDate();
+
+return day===d;
+
+}).length;
+
+if(count===0){
+
+cell.classList.add(
+"calendar-none"
+);
+
+}
+else if(count<=2){
+
+cell.classList.add(
+"calendar-low"
+);
+
+}
+else if(count<=4){
+
+cell.classList.add(
+"calendar-medium"
+);
+
+}
+else{
+
+cell.classList.add(
+"calendar-high"
+);
+
+}
+
+cell.innerText = d;
+
+grid.appendChild(cell);
+
+}
+
+let streak =
+calculateStreak();
+
+if($("currentStreak"))
+$("currentStreak").innerText =
+streak.current;
+
+if($("bestStreak"))
+$("bestStreak").innerText =
+streak.best;
+
+}
+
+// ======================================
+// GRAFICO DEPORTES
+// ======================================
+
+function drawSportsChart(){
+
+if(!$("sportsChart"))
+return;
+
+let sports = {};
+
+db.sessions.forEach(s=>{
+
+sports[s.sport] =
+(sports[s.sport] || 0)
++
+s.duration;
 
 });
 
-if(sportsChart){
+if(sportChartInstance)
+sportChartInstance.destroy();
 
-sportsChart.destroy();
-
-}
-
-sportsChart = new Chart(
-
-document.getElementById("sportsChart"),
-
+sportChartInstance =
+new Chart(
+$("sportsChart"),
 {
 
 type:"doughnut",
 
 data:{
 
-labels:[
-"TKD",
-"Natación",
-"Bicicleta"
-],
+labels:Object.keys(sports),
 
 datasets:[{
 
-data:[
-tkd,
-swim,
-bike
-]
+data:Object.values(sports)
 
 }]
 
 }
 
-}
-
-);
-
-// SLEEP
-
-if(sleepChart){
-
-sleepChart.destroy();
+});
 
 }
 
-sleepChart = new Chart(
+// ======================================
+// GRAFICO SUEÑO
+// ======================================
 
-document.getElementById("sleepChart"),
+function drawSleepChart(){
 
+if(!$("sleepChart"))
+return;
+
+if(sleepChartInstance)
+sleepChartInstance.destroy();
+
+sleepChartInstance =
+new Chart(
+$("sleepChart"),
 {
 
-type:"bar",
+type:"line",
 
 data:{
 
-labels:data.sessions.map(
+labels:
+db.sessions.map(
 s=>s.date
 ),
 
@@ -447,7 +998,8 @@ datasets:[{
 
 label:"Sueño",
 
-data:data.sessions.map(
+data:
+db.sessions.map(
 s=>s.sleep
 )
 
@@ -455,52 +1007,370 @@ s=>s.sleep
 
 }
 
+});
+
 }
 
+// ======================================
+// GRAFICO HIDRATACION
+// ======================================
+
+function drawHydrationChart(){
+
+if(!$("hydrationChart"))
+return;
+
+if(hydrationChartInstance)
+hydrationChartInstance.destroy();
+
+hydrationChartInstance =
+new Chart(
+$("hydrationChart"),
+{
+
+type:"bar",
+
+data:{
+
+labels:
+db.sessions.map(
+s=>s.date
+),
+
+datasets:[{
+
+label:"Litros",
+
+data:
+db.sessions.map(
+s=>s.hydration
+)
+
+}]
+
+}
+
+});
+
+}
+// ======================================
+// GRAFICO PRINCIPAL DE CARGA
+// ======================================
+
+function drawLoadChart(){
+
+if(!$("loadChart"))
+return;
+
+if(loadChartInstance)
+loadChartInstance.destroy();
+
+loadChartInstance =
+new Chart(
+$("loadChart"),
+{
+
+type:"line",
+
+data:{
+
+labels:
+db.sessions.map(
+s=>s.date
+),
+
+datasets:[{
+
+label:"Carga",
+
+data:
+db.sessions.map(
+s=>s.load
+),
+
+tension:0.3
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+display:true
+}
+
+}
+
+}
+
+});
+
+}
+
+// ======================================
+// RESUMEN ENTRENADOR
+// ======================================
+
+function buildCoachSummary(){
+
+if(!$("coachWeekly"))
+return;
+
+let last7 =
+db.sessions.slice(-7);
+
+let totalSessions =
+last7.length;
+
+let totalMinutes =
+last7.reduce(
+(sum,s)=>sum+s.duration,
+0
+);
+
+let totalLoad =
+last7.reduce(
+(sum,s)=>sum+s.load,
+0
+);
+
+let avgEnergy =
+average(
+last7.map(
+s=>s.energy
+)
+).toFixed(1);
+
+let avgMotivation =
+average(
+last7.map(
+s=>s.motivation
+)
+).toFixed(1);
+
+let avgFatigue =
+average(
+last7.map(
+s=>s.fatigue
+)
+).toFixed(1);
+
+$("coachWeekly").innerHTML =
+
+`
+<div class="summary-grid">
+
+<div class="summary-item">
+<span>Sesiones</span>
+<strong>${totalSessions}</strong>
+</div>
+
+<div class="summary-item">
+<span>Horas</span>
+<strong>${(totalMinutes/60).toFixed(1)}</strong>
+</div>
+
+<div class="summary-item">
+<span>Carga</span>
+<strong>${totalLoad}</strong>
+</div>
+
+<div class="summary-item">
+<span>Energía</span>
+<strong>${avgEnergy}</strong>
+</div>
+
+<div class="summary-item">
+<span>Motivación</span>
+<strong>${avgMotivation}</strong>
+</div>
+
+<div class="summary-item">
+<span>Fatiga</span>
+<strong>${avgFatigue}</strong>
+</div>
+
+</div>
+`;
+
+}
+
+// ======================================
+// ALERTAS ENTRENADOR
+// ======================================
+
+function buildWarnings(){
+
+if(!$("coachWarnings"))
+return;
+
+let warnings = [];
+
+let last10 =
+db.sessions.slice(-10);
+
+if(last10.length === 0){
+
+$("coachWarnings").innerHTML =
+"Sin datos suficientes.";
+
+return;
+
+}
+
+let avgFatigue =
+average(
+last10.map(
+s=>s.fatigue
+)
+);
+
+let avgSleep =
+average(
+last10.map(
+s=>s.sleep
+)
+);
+
+let avgHydration =
+average(
+last10.map(
+s=>s.hydration
+)
+);
+
+let avgIntensity =
+average(
+last10.map(
+s=>s.intensity
+)
+);
+
+// Fatiga
+
+if(avgFatigue >= 7){
+
+warnings.push(
+"⚠️ Fatiga elevada."
 );
 
 }
 
-// ============================
-// UPDATE
-// ============================
+// Sueño
 
-function update(){
+if(avgSleep < 6){
 
-document
-.getElementById("humanAI")
-.innerText = humanAI();
-
-document
-.getElementById("totalHours")
-.innerText =
-totalHours()+" h";
-
-document
-.getElementById("totalSwim")
-.innerText =
-totalSwim()+" m";
-
-document
-.getElementById("totalBike")
-.innerText =
-totalBike()+" km";
-
-document
-.getElementById("compliance")
-.innerText =
-compliance()+"%";
-
-renderHistory();
-
-drawCharts();
+warnings.push(
+"😴 Descanso insuficiente."
+);
 
 }
 
-// ============================
+// Hidratación
 
-window.onload = function(){
+if(avgHydration < 1.5){
 
-update();
+warnings.push(
+"💧 Hidratación baja."
+);
+
+}
+
+// Intensidad
+
+if(avgIntensity > 8){
+
+warnings.push(
+"🔥 Intensidad muy alta sostenida."
+);
+
+}
+
+if(warnings.length===0){
+
+warnings.push(
+"✅ Sin alertas importantes."
+);
+
+}
+
+$("coachWarnings").innerHTML =
+
+warnings.map(
+w=>
+`<div class="coach-box coach-warning">${w}</div>`
+).join("");
+
+}
+
+// ======================================
+// EXTENDER UPDATE COACH
+// ======================================
+
+const oldCoach =
+updateCoach;
+
+updateCoach = function(){
+
+oldCoach();
+
+buildCoachSummary();
+
+buildWarnings();
 
 };
+
+// ======================================
+// CARGAR OBJETIVOS EN PERFIL
+// ======================================
+
+function loadGoalsIntoProfile(){
+
+if(!$("weeklyGoal"))
+return;
+
+$("weeklyGoal").value =
+db.goals.weeklySessions;
+
+$("weeklyHoursGoal").value =
+db.goals.weeklyHours;
+
+$("monthlyHoursGoal").value =
+db.goals.monthlyHours;
+
+$("monthlyBikeGoal").value =
+db.goals.monthlyBike;
+
+$("monthlySwimGoal").value =
+db.goals.monthlySwim;
+
+$("mainGoal").value =
+db.goals.mainGoal;
+
+}
+
+// ======================================
+// ACTUALIZAR GENERAL
+// ======================================
+
+const oldUpdateAll =
+updateAll;
+
+updateAll = function(){
+
+oldUpdateAll();
+
+loadGoalsIntoProfile();
+
+};
+
+// ======================================
+// PRIMER ARRANQUE
+// ======================================
+
+updateAll();

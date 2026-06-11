@@ -1,33 +1,432 @@
-body{
+/* ==========================
+   RESET
+========================== */
+
+*{
 margin:0;
-font-family:Arial;
-background:#0b0b0b;
-color:white;
-padding:15px;
+padding:0;
+box-sizing:border-box;
+font-family:Inter, Arial, sans-serif;
 }
 
-h1{color:#00ff99;text-align:center}
+body{
+background:#0f172a;
+color:#f8fafc;
+padding-bottom:90px;
+}
 
-.card{
-background:#161616;
-padding:15px;
-border-radius:15px;
+/* ==========================
+   TOP BAR
+========================== */
+
+.topbar{
+padding:20px;
+background:#111827;
+border-bottom:1px solid #1e293b;
+position:sticky;
+top:0;
+z-index:100;
+}
+
+.topbar h1{
+font-size:1.4rem;
+font-weight:700;
+}
+
+.topbar p{
+color:#94a3b8;
+margin-top:5px;
+}
+
+/* ==========================
+   SCREENS
+========================== */
+
+.screen{
+display:none;
+padding:18px;
+animation:fade .25s ease;
+}
+
+.screen.active{
+display:block;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(10px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* ==========================
+   TITULOS
+========================== */
+
+h2{
+margin-bottom:15px;
+font-size:1.3rem;
+}
+
+h3{
+margin-bottom:10px;
+}
+
+/* ==========================
+   GRID DASHBOARD
+========================== */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
 margin-bottom:15px;
 }
 
-input,textarea{
-width:100%;
-margin:5px 0;
-padding:10px;
-border-radius:8px;
-border:none;
+.stat-card{
+background:#1e293b;
+border-radius:18px;
+padding:16px;
+box-shadow:0 3px 15px rgba(0,0,0,.25);
 }
 
-button{
+.stat-card span{
+font-size:.8rem;
+color:#94a3b8;
+display:block;
+margin-bottom:8px;
+}
+
+.stat-card h3{
+font-size:1.4rem;
+font-weight:700;
+color:#22c55e;
+}
+
+/* ==========================
+   CARDS
+========================== */
+
+.card{
+background:#1e293b;
+border-radius:20px;
+padding:18px;
+margin-bottom:15px;
+box-shadow:0 3px 15px rgba(0,0,0,.25);
+}
+
+.card p{
+line-height:1.5;
+}
+
+/* ==========================
+   FORMULARIOS
+========================== */
+
+label{
+display:block;
+margin-top:12px;
+margin-bottom:6px;
+font-size:.9rem;
+color:#cbd5e1;
+}
+
+input,
+textarea,
+select{
+
 width:100%;
 padding:12px;
-background:#00ff99;
 border:none;
-border-radius:10px;
+border-radius:12px;
+
+background:#0f172a;
+
+color:white;
+
+outline:none;
+}
+
+textarea{
+resize:vertical;
+min-height:80px;
+}
+
+input[type=range]{
+padding:0;
+}
+
+/* ==========================
+   BOTONES
+========================== */
+
+button{
+
+border:none;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.card button{
+
+width:100%;
+
+padding:14px;
+
+border-radius:14px;
+
 font-weight:bold;
+
+background:#22c55e;
+
+color:white;
+
+margin-top:15px;
+
+}
+
+.card button:hover{
+
+transform:translateY(-2px);
+
+}
+
+/* ==========================
+   HISTORIAL
+========================== */
+
+.history-card{
+
+background:#111827;
+
+border-left:5px solid #22c55e;
+
+padding:15px;
+
+margin-bottom:12px;
+
+border-radius:14px;
+
+}
+
+.history-date{
+
+font-weight:bold;
+
+margin-bottom:10px;
+
+color:#22c55e;
+
+}
+
+.history-row{
+
+margin:4px 0;
+
+font-size:.95rem;
+
+}
+
+/* ==========================
+   GRAFICOS
+========================== */
+
+canvas{
+
+width:100% !important;
+
+max-height:320px;
+
+}
+
+/* ==========================
+   BOTTOM NAV
+========================== */
+
+.bottom-nav{
+
+position:fixed;
+
+bottom:0;
+
+left:0;
+
+right:0;
+
+height:72px;
+
+background:#111827;
+
+display:flex;
+
+justify-content:space-around;
+
+align-items:center;
+
+border-top:1px solid #1e293b;
+
+z-index:1000;
+
+}
+
+.bottom-nav button{
+
+background:none;
+
+color:white;
+
+font-size:1.4rem;
+
+width:100%;
+
+height:100%;
+
+}
+
+.bottom-nav button:hover{
+
+background:#1e293b;
+
+}
+
+/* ==========================
+   DASHBOARD EXTRA
+========================== */
+
+.progress-box{
+
+margin-top:10px;
+
+}
+
+.progress-bar{
+
+height:12px;
+
+background:#0f172a;
+
+border-radius:50px;
+
+overflow:hidden;
+
+}
+
+.progress-fill{
+
+height:100%;
+
+width:60%;
+
+background:#22c55e;
+
+}
+
+/* ==========================
+   STATUS
+========================== */
+
+.status-good{
+
+color:#22c55e;
+
+font-weight:bold;
+
+}
+
+.status-warning{
+
+color:#f59e0b;
+
+font-weight:bold;
+
+}
+
+.status-danger{
+
+color:#ef4444;
+
+font-weight:bold;
+
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media(max-width:700px){
+
+.cards{
+
+grid-template-columns:1fr 1fr;
+
+}
+
+.topbar h1{
+
+font-size:1.2rem;
+
+}
+
+.stat-card h3{
+
+font-size:1.2rem;
+
+}
+
+}
+
+@media(max-width:500px){
+
+.cards{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+/* ==========================
+   SCROLLBAR
+========================== */
+
+::-webkit-scrollbar{
+width:8px;
+}
+
+::-webkit-scrollbar-track{
+background:#111827;
+}
+
+::-webkit-scrollbar-thumb{
+background:#334155;
+border-radius:20px;
+}
+
+/* ==========================
+   FUTURAS TARJETAS
+========================== */
+
+.metric-large{
+
+font-size:2rem;
+
+font-weight:700;
+
+color:#22c55e;
+
+}
+
+.metric-label{
+
+color:#94a3b8;
+
+font-size:.85rem;
+
 }

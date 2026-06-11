@@ -317,6 +317,8 @@ updateStats();
 
 updateCalendar();
 
+renderHistory();
+
 }
 
 // ======================================
@@ -1374,3 +1376,195 @@ loadGoalsIntoProfile();
 // ======================================
 
 updateAll();
+// ======================================
+// HISTORIAL
+// ======================================
+
+function renderHistory(){
+
+if(!$("historyContainer"))
+return;
+
+let container =
+$("historyContainer");
+
+container.innerHTML = "";
+
+let grouped = {};
+
+db.sessions.forEach(session=>{
+
+if(!grouped[session.date]){
+
+grouped[session.date] = [];
+
+}
+
+grouped[session.date]
+.push(session);
+
+});
+
+let dates =
+Object.keys(grouped)
+.sort()
+.reverse();
+
+dates.forEach(date=>{
+
+let block =
+document.createElement("div");
+
+block.className =
+"day-group";
+
+block.innerHTML +=
+
+`
+<div class="day-title">
+
+📅 ${date}
+
+(${grouped[date].length} sesiones)
+
+</div>
+`;
+
+grouped[date].forEach(session=>{
+
+block.innerHTML +=
+
+`
+<div class="session-card">
+
+<div class="session-header">
+
+<strong>
+
+${session.sport}
+
+</strong>
+
+<div class="session-actions">
+
+<button
+class="edit-btn"
+onclick="editSession(${session.id})">
+
+✏️
+
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteSession(${session.id})">
+
+🗑
+
+</button>
+
+</div>
+
+</div>
+
+<div>
+
+⏱ ${session.duration} min
+
+</div>
+
+<div>
+
+🔥 Intensidad:
+${session.intensity}/10
+
+</div>
+
+<div>
+
+📈 Carga:
+${session.load}
+
+</div>
+
+</div>
+`;
+
+});
+
+container.appendChild(block);
+
+});
+
+}
+
+// ======================================
+// ELIMINAR
+// ======================================
+
+function deleteSession(id){
+
+if(
+!confirm(
+"¿Eliminar sesión?"
+)
+)
+return;
+
+db.sessions =
+db.sessions.filter(
+s=>s.id !== id
+);
+
+saveDB();
+
+updateAll();
+
+}
+
+// ======================================
+// EDITAR
+// ======================================
+
+function editSession(id){
+
+let s =
+db.sessions.find(
+x=>x.id===id
+);
+
+if(!s)
+return;
+
+$("sessionDate").value =
+s.date;
+
+$("sport").value =
+s.sport;
+
+$("duration").value =
+s.duration;
+
+$("intensity").value =
+s.intensity;
+
+$("hydration").value =
+s.hydration;
+
+$("sleep").value =
+s.sleep;
+
+$("energy").value =
+s.energy;
+
+$("motivation").value =
+s.motivation;
+
+$("fatigue").value =
+s.fatigue;
+
+alert(
+"Datos cargados. Editá y guardá nuevamente."
+);
+
+}
